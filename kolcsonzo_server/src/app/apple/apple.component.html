@@ -1,0 +1,34 @@
+<div >
+<h1 >Alma</h1>
+<button (click)="this.getContent()">Get content</button>
+<table>
+    <tr>
+        <th>card owner id</th>
+        <th>nev</th>
+        <th>email</th>
+        <th>neptun kod</th>
+        <th>torzsszam</th>
+        <th>igazolvany tipus</th>
+        <th>kartyabirtokos tipusa</th>
+        <th>kartyabirtokos statusz</th>
+        <th>kartyaszam</th>
+        <th>kartyatipus</th>
+        <th>kartyastatusz</th>
+        <th>ad username</th>
+    </tr>
+    <tr *ngFor="let item of this.content">
+        <td>{{item.card_owner_id}}</td>
+        <td>{{item.nev}}</td>
+        <td>{{item.email}}</td>
+        <td>{{item.neptun_kod}}</td>
+        <td>{{item.torzsszam}}</td>
+        <td>{{item.igazolvany_tipus}}</td>
+        <td>{{item.kartyabirtokos_tipusa}}</td>
+        <td>{{item.kartyabirtokos_statusz}}</td>
+        <td>{{item.kartyaszam}}</td>
+        <td>{{item.kartyatipus}}</td>
+        <td>{{item.kartyastatusz}}</td>
+        <td>{{item.ad_username}}</td>
+    </tr>
+</table>
+</div>

@@ -1,0 +1,6 @@
+Angular Router	Advanced client-side navigation and routing based on Angular components. Supports lazy-loading, nested routes, custom path matching, and more.
+Angular Forms	Uniform system for form participation and validation.
+Angular HttpClient	Robust HTTP client that can power more advanced client-server communication.
+Angular Animations	Rich system for driving animations based on application state.
+Angular PWA	Tools for building Progressive Web Applications (PWAs) including a service worker and Web app manifest.
+Angular Schematics	Automated scaffolding, refactoring, and update tools that simplify development at large scale.

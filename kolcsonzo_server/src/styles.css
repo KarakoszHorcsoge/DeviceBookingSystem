@@ -1,0 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    background-color: rgb(242, 242, 244);
+    margin: 0px;
+    overflow: hidden;
+}
+
+:root {
+    --nav-background: rgb(219, 217, 223);
+    --header-text: white;
+    --header-bg: #212529;
+    --header-hover-bg: #0f1113;
+    --side-menu-w: 100px;
+    
+    font-size: 19px;
+}
+
+::-webkit-scrollbar{
+    width: 10px;
+}
+
+::-webkit-scrollbar-track{
+    background-color: rgb(220, 218, 228);
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: #22355e;
+}

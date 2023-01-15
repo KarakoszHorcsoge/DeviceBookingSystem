@@ -1,0 +1,5 @@
+ng build	||      Compiles an Angular app into an output directory.
+ng serve	||      Builds and serves your application, rebuilding on file changes.
+ng generate ||      Generates or modifies files based on a schematic.
+ng test     ||      Runs unit tests on a given project.
+ng e2e      ||      Builds and serves an Angular application, then runs end-to-end tests.
