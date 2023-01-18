@@ -1,14 +1,14 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models;
 
-public class card{
-    /// <summary>
-    /// Kártyaszám
-    /// </summary>
-    /// <value>int</value>
-    [Required]
-    public int CardId { get; set; }
+/// <summary>
+/// Kártyák
+/// </summary>
+[Table("Card")]
+public class Card : BaseModel{
+    
 
     /// <summary>
     /// Aktív-e a kártya
@@ -31,28 +31,13 @@ public class card{
     [Required]
     public int OwnerId { get; set; }
 
-    public virtual person Owner { get; set; }
+    [ForeignKey("OwnerId")]
+    public virtual Person Owner { get; set; }
 
-    /// <summary>
-    /// Létrehozási Idő
-    /// </summary>
-    /// <value>DateTime</value>
-    [Required]
-    public DateTime CreationTime { get; set; }
-
-        /// <summary>
+     /// <summary>
     /// megjegyzés
     /// </summary>
     /// <value>string 255</value>
     [Required,MaxLength(255)]
     public string comment { get; set; }
-
-    /// <summary>
-    /// Létrehozó admin id-ja
-    /// </summary>
-    /// <value>int</value>
-    [Required]
-    public int CreatorId { get; set; }
-
-    public virtual administrator Creator { get; set; }
 }

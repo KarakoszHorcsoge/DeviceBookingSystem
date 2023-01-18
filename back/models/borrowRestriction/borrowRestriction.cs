@@ -3,21 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models;
 
-public class borrowRestriction{
-    /// <summary>
-    /// kölcsönzési korlátozás id-ja
-    /// </summary>
-    /// <value>int</value>
-    [Required,Key]
-    public int BorrowRestrictionId { get; set; }
+/// <summary>
+/// Kölcsönzési korlátok
+/// </summary>
+[Table("BorrowRestriction")]
+public class BorrowRestriction : BaseModel{
     
-    /// <summary>
-    /// Létrehozási idő
-    /// </summary>
-    /// <value>DateTime</value>
-    [Required]
-    public DateTime CreationTime { get; set; }
-
     /// <summary>
     /// kezdeti idő
     /// </summary>
@@ -36,42 +27,33 @@ public class borrowRestriction{
     /// Porta id-ja
     /// </summary>
     /// <value>int</value>
-    [Required,ForeignKey("reception")]
+    [Required]
     public int ReceptionId { get; set; }
 
-    public virtual reception Reception { get; set; }
+    [ForeignKey("ReceptionId")]
+    public virtual Reception Reception { get; set; }
 
     /// <summary>
     /// eszköz id-ja
     /// </summary>
     /// <value>nullable int</value>
-    [ForeignKey("device")]
     public int? DeviceId { get; set; }
 
-    public virtual device? Device { get; set; }
+    [ForeignKey("deviceId")]
+    public virtual Device Device { get; set; }
 
     /// <summary>
     /// eszköz típusának id-ja
     /// </summary>
     /// <value>nullable int</value>
-    [ForeignKey("deviceType")]
     public int? DeviceTypeId { get; set; }
 
-    public virtual deviceType DeviceType { get; set; }
+    [ForeignKey("DeviceType")]
+    public virtual DeviceType DeviceType { get; set; }
 
     /// <summary>
     /// if device type is added need an amount
     /// </summary>
     /// <value>nullable int</value>
     public int? Amount { get; set; }
-    
-    [Required]
-    public int CreatorId { get; set; }
-
-    /// <summary>
-    /// létrehozó admin id-ja
-    /// </summary>
-    /// <value>int</value>
-    [ForeignKey("administrator")]
-    public virtual administrator Creator { get; set; }
 }

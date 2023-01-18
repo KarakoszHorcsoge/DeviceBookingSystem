@@ -3,13 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models;
 
-public class reception{
-    /// <summary>
-    /// Porta id-ja
-    /// </summary>
-    /// <value>int auto increment</value>
-    [Key,Required,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ReceptionId { get; set; }
+/// <summary>
+/// Recepció
+/// </summary>
+[Table("Reception")]
+public class Reception : BaseModel{
 
     /// <summary>
     /// porta id-ja
@@ -26,34 +24,19 @@ public class reception{
     public string Address { get; set; }
 
     /// <summary>
-    /// létrehozási idő
-    /// </summary>
-    /// <value>DateTime</value>
-    [Required]
-    public DateTime CreationTime { get; set; }
-
-    /// <summary>
     /// megjegyzések
     /// </summary>
     /// <value>string 255</value>
     [Required, MaxLength(255)]
-    public string comment { get; set; }
+    public string Comment { get; set; }
 
     /// <summary>
     /// A portáért felelős rendszergazda
     /// </summary>
     /// <value>int</value>
-    [Required,ForeignKey("administrator")]
+    [Required]
     public int AdminId { get; set; }
 
-    public virtual administrator Admin { get; set; }
-
-    /// <summary>
-    /// Készítő admin
-    /// </summary>
-    /// <value>int</value>
-    [Required,ForeignKey("administrator")]
-    public int CreatorId { get; set; }
-
-    public virtual administrator Creator { get; set; }
+    [ForeignKey("administrator")]
+    public virtual Administrator Admin { get; set; }
 }

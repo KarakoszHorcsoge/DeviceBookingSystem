@@ -3,14 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models;
 
-public class person{
-    
-    /// <summary>
-    /// person id-ja
-    /// </summary>
-    /// <value>int auto increment</value>
-    [Required]
-    public int PersonId { get; set; }
+/// <summary>
+/// Személyek
+/// </summary>
+[Table("Person")]
+public class Person : BaseModel{
 
     /// <summary>
     /// a személy neve
@@ -24,7 +21,7 @@ public class person{
     /// </summary>
     /// <value>bool</value>
     [Required]
-    public bool IsBorrowable { get; set; }=false;
+    public bool IsAbleToBorrow { get; set; }
 
     /// <summary>
     /// neptunkód
@@ -70,13 +67,6 @@ public class person{
     public string AdUsername { get; set; }
 
     /// <summary>
-    /// létrehozási idő
-    /// </summary>
-    /// <value>DateTime</value>
-    [Required]
-    public DateTime CreationTime { get; set; }
-
-    /// <summary>
     /// megjegyzések
     /// </summary>
     /// <value>string 100</value>
@@ -87,19 +77,10 @@ public class person{
     /// Megadja hogy melyik csapathoz tartozik
     /// </summary>
     /// <value>nullable int</value>
-    public int? PersonGroupId { get; set; } = null;
+    public Guid? PersonGroupId { get; set; } = null;
 
-    public virtual personGroup? PersonGroup { get; set; }
-
-    /// <summary>
-    /// létrehozó admin id-ja
-    /// </summary>
-    /// <value>int</value>
-    [Required]
-    public int CreatorId { get; set; }
-
-    [ForeignKey("CreatorId")]
-    public virtual administrator Creator { get; set; }
+    [ForeignKey("PersonGroupId")]
+    public virtual PersonGroup PersonGroup { get; set; }
 
     /// <summary>
     /// személy típusa<br/>
@@ -109,5 +90,6 @@ public class person{
     [Required]
     public int PersonTypeId { get; set; }
 
-    public virtual personType PersonType { get; set; }
+    [ForeignKey("PersonTypeId")]
+    public virtual PersonType PersonType { get; set; }
 }

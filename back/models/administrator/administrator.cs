@@ -1,16 +1,14 @@
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models{
-
-    public class administrator{
-        /// <summary>
-        /// adminisztrátor id
-        /// </summary>
-        /// <value>auto increment, int</value>
-        [Required]
-        public int AdministratorId { get; set; }
-
+    /// <summary>
+    /// Rendszergazdák
+    /// </summary>
+    [Table("Administrator")]
+    public class Administrator : BaseModel{
+        
         /// <summary>
         /// név
         /// </summary>
@@ -26,29 +24,15 @@ namespace back.models{
         public string Email { get; set; }
 
         /// <summary>
-        /// létrehozási idő
-        /// </summary>
-        /// <value>Datetime</value>
-        [Required]
-        public DateTime CreationTime{ get; set;}
-
-        /// <summary>
         /// authorotyId<br/>
         /// referálja az authoroty táblát
         /// </summary>
         /// <value>int</value>
         [Required]
         public int AuthorotyId{ get; set;}
-
-        public virtual authoroty Authoroty {get;set;}
-
-        /// <summary>
-        /// létrehozó admin id-ja
-        /// </summary>
-        /// <value>nullable int</value>
-        public int? Creator_id { get; set; }
-    
-        public virtual administrator? Creator { get; set; }
-    }
+        
+        [ForeignKey("AuthorotyId")]
+        public virtual Authoroty Authoroty {get;set;}
+     }
 
 }

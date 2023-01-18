@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models{
 
-    public class eventLog{
+    [Table("EventLog")]
+    public class EventLog{
         /// <summary>
         /// event log id-ja
         /// </summary>
@@ -17,7 +19,7 @@ namespace back.models{
         [Required]
         public int CommandOriginId { get; set; }
     
-        public virtual administrator CommandOrigin { get; set; }
+        public virtual Administrator CommandOrigin { get; set; }
 
         /// <summary>
         /// parancs szülője 'közvetlen kiadója'
@@ -26,7 +28,7 @@ namespace back.models{
         [Required]
         public int CommandParentId { get; set; }
 
-        public virtual administrator CommandParent { get; set; }
+        public virtual Administrator CommandParent { get; set; }
 
         /// <summary>
         /// lefutási idő
@@ -81,7 +83,7 @@ namespace back.models{
         /// <value>nullable int</value>
         public int? ParentEventLogId { get; set; }
 
-        public virtual eventLog? ParentEvent { get; set; }
+        public virtual EventLog ParentEvent { get; set; }
     }
 
 }

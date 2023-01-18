@@ -1,15 +1,14 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using back.enums.status;
 
 namespace back.models;
 
-public class personGroup{
-    /// <summary>
-    /// Szemékly csoportok id ja
-    /// </summary>
-    /// <value>int autoincrement</value>
-    [Required]
-    public int PersonGroupId { get; set; }
+/// <summary>
+/// Személy csoportok
+/// </summary>
+[Table("PersonGroup")]
+public class PersonGroup : BaseModel{
 
     /// <summary>
     /// Személy csoport neve 
@@ -19,18 +18,11 @@ public class personGroup{
     public string Name { get; set; }
 
     /// <summary>
-    /// Létrehozás ideje
-    /// </summary>
-    /// <value>DateTime</value>
-    [Required]
-    public DateTime CreationTime { get; set; }
-
-    /// <summary>
     /// státusz
     /// </summary>
     /// <value>enum (inactive,active,temporarilyActive,partiallyActive)</value>
     [Required]
-    public personGroupStatus status { get; set; }
+    public PersonGroupStatus status { get; set; }
 
     /// <summary>
     /// Megjegyzés
@@ -38,14 +30,4 @@ public class personGroup{
     /// <value>string 255</value>
     [Required,MaxLength(255)]
     public string comment { get; set; }
-
-    /// <summary>
-    /// Létrehozó id
-    /// </summary>
-    /// <value>int</value>
-    [Required]
-    public int CreatorId { get; set; }
-
-    [Required]
-    public virtual administrator Creator {get;set;}
 }

@@ -4,28 +4,18 @@ using back.enums.status;
 
 namespace back.models;
 
-public class device{
-
-    /// <summary>
-    /// Az eszköz id-ja
-    /// </summary>
-    /// <value>int auto increment</value>
-    [Required,Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int DeviceId { get; set; }
-
-    /// <summary>
-    /// létrehozási idő
-    /// </summary>
-    /// <value>DateTime</value>
-    [Required]
-    public DateTime CreationTime { get; set; }
+/// <summary>
+/// Eszközök
+/// </summary>
+[Table("Device")]
+public class Device : BaseModel{
 
     /// <summary>
     /// az eszköz státusza
     /// </summary>
     /// <value>deviceStatus enum</value>
     [Required]
-    public deviceStatus DeviceStatus { get; set; }
+    public DeviceStatus DeviceStatus { get; set; }
 
     /// <summary>
     /// Megjegyzés
@@ -38,35 +28,28 @@ public class device{
     /// eszköz tipusának id-ja
     /// </summary>
     /// <value>int</value>
-    [Required,ForeignKey("deviceType")]
+    [Required]
     public int DeviceTypeId { get; set; }
 
-    public virtual deviceType DeviceType { get; set; }
+    [ForeignKey("DeviceTypeId")]
+    public virtual DeviceType DeviceType { get; set; }
 
     /// <summary>
     /// porta id-ja
     /// </summary>
     /// <value>int</value>
-    [Required, ForeignKey("reception")]
+    [Required]
     public int ReceptionId { get; set; }
 
-    public virtual reception Reception { get; set; }
-
-    /// <summary>
-    /// létrehozó id-ja
-    /// </summary>
-    /// <value>int</value>
-    [Required,ForeignKey("administrator")]
-    public int CreatorId { get; set; }
-
-    public virtual administrator Administrator { get; set; }
+    [ForeignKey("ReceptionId")]
+    public virtual Reception Reception { get; set; }
 
     /// <summary>
     /// A birtokos id-ja
     /// </summary>
     /// <value>nullable int</value>
-    [ForeignKey("person")]
     public int? PosesserId { get; set; }
 
-    public virtual person? Posesser { get; set; }
+    [ForeignKey("PersonId")]
+    public virtual Person Posesser { get; set; }
 }

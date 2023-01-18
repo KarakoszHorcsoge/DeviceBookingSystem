@@ -12,3 +12,4 @@ Cargo.lock
 
 kolcsonzo_server/.angular/cache/*
 kolcsonzo_server/node_modules/*
+.vscode

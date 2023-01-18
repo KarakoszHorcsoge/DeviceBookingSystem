@@ -1,18 +1,15 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models{
-
-public class authoroty{
-    /// <summary>
-    /// jogosultsági szint id<br/>
-    /// </summary>
-    /// <value>auto increment, intiger</value>
-    [Required]
-    public int authorotyid { get; set; }
-
+/// <summary>
+/// Jogosultsági szintek
+/// </summary>
+[Table("Authoroty")]
+public class Authoroty : BaseModel{
+    
     /// <summary>
     /// név<br/>
-    /// 
     /// </summary>
     /// <value>1 string 45</value>
     [Required,MinLength(1),MaxLength(45)]

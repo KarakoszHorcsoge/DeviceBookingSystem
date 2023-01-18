@@ -5,7 +5,7 @@ namespace back.enums.status;
 /// persongroup statuszok<br/>
 /// start with 69420
 /// </summary>
-public enum personGroupStatus{
+public enum PersonGroupStatus{
     inactive = 694201,
     active = 694202,
     temporarilyActive = 694203,
@@ -16,7 +16,7 @@ public enum personGroupStatus{
 /// eszközök státusza<br/>
 /// start with 250123
 /// </summary>
-public enum deviceStatus{
+public enum DeviceStatus{
     notYetActive = 2501231,
     active = 2501232,
     underRepair = 2501233,

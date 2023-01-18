@@ -1,15 +1,13 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models;
 
-public class personType{
-
-    /// <summary>
-    /// személy típusának id-ja
-    /// </summary>
-    /// <value>int</value>
-    [Required]
-    public int PersonTypeId { get; set; }
+/// <summary>
+/// Személyek típusai
+/// </summary>
+[Table("PersonType")]
+public class PersonType : BaseModel{
 
     /// <summary>
     /// neve a személy típusnak
@@ -30,7 +28,7 @@ public class personType{
     /// </summary>
     /// <value> string 2</value>
     [Required,MaxLength(2)]
-    public string CardTag { get; set; }
+    public string CardPrefix { get; set; }
 
     /// <summary>
     /// Létrehozási idő
@@ -44,14 +42,5 @@ public class personType{
     /// </summary>
     /// <value>string 255</value>
     [Required,MaxLength(255)]
-    public string comment { get; set; }
-
-    /// <summary>
-    /// Létrehozó admin id-ja
-    /// </summary>
-    /// <value>int</value>
-    [Required]
-    public int CreatorId { get; set; }
-
-    public virtual administrator Creator { get; set; }
+    public string Comment { get; set; }
 }
