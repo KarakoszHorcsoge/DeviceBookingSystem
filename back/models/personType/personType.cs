@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace back.models.PersonType;
+namespace back.models.PersonTypes;
 
 /// <summary>
 /// Személyek típusai

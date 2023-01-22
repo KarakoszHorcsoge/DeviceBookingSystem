@@ -4,7 +4,7 @@ namespace back.models.PersonTypes;
 
 
 
-public class PersonType : BaseRequest{
+public class PersonTypeAddUpdateRequest : BaseRequest{
 
     /// <summary>
     /// neve a személy típusnak

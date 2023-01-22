@@ -1,13 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models.Preferences;
 
-/// <summary>
-/// Személyek beállításai
-/// </summary>
-[Table("Preference")]
-public class Preference : BaseModel{
+public class PreferenceAddUpdateRequest : BaseRequest{
 
     /// <summary>
     /// preferencia neve

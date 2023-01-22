@@ -1,4 +1,4 @@
-namespace back.models.PersonType;
+namespace back.models.PersonTypes;
 
 public class PersonTypeGetResponse : BaseResponse{
 

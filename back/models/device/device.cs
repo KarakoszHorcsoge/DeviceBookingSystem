@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using back.enums.status;
 using back.models.DeviceTypes;
 using back.models.Persons;
+using back.models.Receptions;
 
 namespace back.models.Devices;
 
