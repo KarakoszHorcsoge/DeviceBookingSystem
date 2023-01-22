@@ -3,14 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models.DelayedEvents;
 
-/// <summary>
-/// Késleltetett Események
-/// </summary>
-[Table("DelayedEvent")]
-public class DelayedEvent : BaseModel
-{
-    
 
+public class DelayedEventAddUpdateRequest : BaseRequest
+{
     /// <summary>
     /// neve a delayed eventnek, ha nem autómata
     /// </summary>
@@ -36,6 +31,6 @@ public class DelayedEvent : BaseModel
     /// megjegyzések
     /// </summary>
     /// <value>string 255</value>
-    [Required,MaxLength(255)]
+    [Required, MaxLength(255)]
     public string Comment { get; set; }
 }

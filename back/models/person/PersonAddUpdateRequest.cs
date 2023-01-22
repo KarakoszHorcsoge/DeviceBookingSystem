@@ -1,14 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using back.models.PersonGroups;
 
 namespace back.models.Persons;
 
-/// <summary>
-/// Személyek
-/// </summary>
-[Table("Person")]
-public class Person : BaseModel{
+public class PersonAddUpdateRequest : BaseRequest{
 
     /// <summary>
     /// a személy neve
@@ -79,18 +74,4 @@ public class Person : BaseModel{
     /// </summary>
     /// <value>nullable int</value>
     public Guid? PersonGroupId { get; set; } = null;
-
-    [ForeignKey("PersonGroupId")]
-    public virtual PersonGroup PersonGroup { get; set; }
-
-    /// <summary>
-    /// személy típusa<br/>
-    /// pl.: Előadó, Hallgató,VIP stb
-    /// </summary>
-    /// <value>int</value>
-    [Required]
-    public Guid PersonTypeId { get; set; }
-
-    [ForeignKey("PersonTypeId")]
-    public virtual PersonType PersonType { get; set; }
 }

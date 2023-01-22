@@ -1,43 +1,25 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using back.models.Administrators;
 
 namespace back.models.EventLogs;
 
-    [Table("EventLog")]
-    public class EventLog{
-        /// <summary>
-        /// event log id-ja
-        /// </summary>
-        /// <value>int autoincrement</value>
-        [Required,Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int EventLogId { get; set; }
+public class EventLogGetResponse {
 
         /// <summary>
         /// parancs létrehozoója, az eredeti
         /// </summary>
         /// <value>int</value>
-        [Required]
         public Guid CommandOriginId { get; set; }
-
-        [ForeignKey("CommandOriginId")]
-        public virtual Administrator CommandOrigin { get; set; }
 
         /// <summary>
         /// parancs szülője 'közvetlen kiadója'
         /// </summary>
         /// <value>int</value>
-        [Required]
         public Guid CommandParentId { get; set; }
-
-        [ForeignKey("CommandParentId")]
-        public virtual Administrator CommandParent { get; set; }
 
         /// <summary>
         /// lefutási idő
         /// </summary>
         /// <value>Datetime</value>
-        [Required]
         public DateTime ExecutionTime { get; set; }
 
         /// <summary>
@@ -45,28 +27,24 @@ namespace back.models.EventLogs;
         /// pl.: admin,person,personGroup stb
         /// </summary>
         /// <value>string</value>
-        [Required,MinLength(1),MaxLength(20)]
         public string TargetType { get; set; }
 
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        [Required]
         public int TargetId { get; set; }
 
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        [Required]
         public int? SecondTargetId { get; set; }
 
         /// <summary>
         /// parancs típusa
         /// </summary>
         /// <value>1 string 50</value>
-        [Required,MinLength(1),MaxLength(50)]
         public string CommandType { get; set; }
 
         /// <summary>
@@ -81,6 +59,4 @@ namespace back.models.EventLogs;
         /// </summary>
         /// <value>nullable int</value>
         public int? ParentEventLogId { get; set; }
-
-        public virtual EventLog ParentEvent { get; set; }
     }

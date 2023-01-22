@@ -1,14 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using back.enums.status;
 
 namespace back.models.PersonGroups;
 
-/// <summary>
-/// Személy csoportok
-/// </summary>
-[Table("PersonGroup")]
-public class PersonGroup : BaseModel{
+public class PersonGroupAddUpdaeRequest : BaseRequest{
 
     /// <summary>
     /// Személy csoport neve 

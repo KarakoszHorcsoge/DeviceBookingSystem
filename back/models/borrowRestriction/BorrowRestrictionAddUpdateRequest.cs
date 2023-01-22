@@ -1,17 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using back.models.Devices;
-using back.models.DeviceTypes;
 
 namespace back.models.BorrowRestrictions;
 
-/// <summary>
-/// Kölcsönzési korlátok
-/// </summary>
-[Table("BorrowRestriction")]
-public class BorrowRestriction : BaseModel{
-    
-    /// <summary>
+public class BorrowRestrictionAddUpdateRequest:BaseRequest{
+         /// <summary>
     /// kezdeti idő
     /// </summary>
     /// <value>DateTime</value>
@@ -32,26 +24,17 @@ public class BorrowRestriction : BaseModel{
     [Required]
     public Guid ReceptionId { get; set; }
 
-    [ForeignKey("ReceptionId")]
-    public virtual Reception Reception { get; set; }
-
     /// <summary>
     /// eszköz id-ja
     /// </summary>
     /// <value>nullable int</value>
     public Guid? DeviceId { get; set; }
 
-    [ForeignKey("DeviceId")]
-    public virtual Device Device { get; set; }
-
     /// <summary>
     /// eszköz típusának id-ja
     /// </summary>
     /// <value>nullable int</value>
     public Guid? DeviceTypeId { get; set; }
-
-    [ForeignKey("DeviceTypeId")]
-    public virtual DeviceType DeviceType { get; set; }
 
     /// <summary>
     /// if device type is added need an amount

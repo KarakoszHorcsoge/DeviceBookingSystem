@@ -1,17 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using back.models.Administrators;
 
 namespace back.models.EventLogs;
 
-    [Table("EventLog")]
-    public class EventLog{
-        /// <summary>
-        /// event log id-ja
-        /// </summary>
-        /// <value>int autoincrement</value>
-        [Required,Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int EventLogId { get; set; }
+public class EventLogAddUpdateRequest : BaseRequest{
 
         /// <summary>
         /// parancs létrehozoója, az eredeti
@@ -20,18 +11,12 @@ namespace back.models.EventLogs;
         [Required]
         public Guid CommandOriginId { get; set; }
 
-        [ForeignKey("CommandOriginId")]
-        public virtual Administrator CommandOrigin { get; set; }
-
         /// <summary>
         /// parancs szülője 'közvetlen kiadója'
         /// </summary>
         /// <value>int</value>
         [Required]
         public Guid CommandParentId { get; set; }
-
-        [ForeignKey("CommandParentId")]
-        public virtual Administrator CommandParent { get; set; }
 
         /// <summary>
         /// lefutási idő
@@ -81,6 +66,4 @@ namespace back.models.EventLogs;
         /// </summary>
         /// <value>nullable int</value>
         public int? ParentEventLogId { get; set; }
-
-        public virtual EventLog ParentEvent { get; set; }
     }

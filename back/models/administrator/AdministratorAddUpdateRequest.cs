@@ -1,14 +1,8 @@
-
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using back.models.Authorotys;
 
 namespace back.models.Administrators;
-/// <summary>
-/// Rendszergazdák
-/// </summary>
-[Table("Administrator")]
-public class Administrator : BaseModel
+
+public class AdministratorAddUpdateRequest : BaseRequest
 {
 
     /// <summary>
@@ -22,7 +16,7 @@ public class Administrator : BaseModel
     /// email cím
     /// </summary>
     /// <value>1 string 100</value>
-    [Required, MinLength(1), MaxLength(100)]
+    [Required, EmailAddress, MinLength(1), MaxLength(100)]
     public string Email { get; set; }
 
     /// <summary>
@@ -32,7 +26,4 @@ public class Administrator : BaseModel
     /// <value>int</value>
     [Required]
     public Guid AuthorotyId { get; set; }
-
-    [ForeignKey("AuthorotyId")]
-    public virtual Authoroty Authoroty { get; set; }
 }

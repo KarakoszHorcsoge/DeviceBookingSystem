@@ -1,13 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models.DeviceTypes;
 
-/// <summary>
-/// Eszköz típusának megadása
-/// </summary>
-[Table("DeviceType")]
-public class DeviceType : BaseModel{
+public class DeviceTypeAddUpdateRequest : BaseRequest{
 
     /// <summary>
     /// az eszköz típusának neve

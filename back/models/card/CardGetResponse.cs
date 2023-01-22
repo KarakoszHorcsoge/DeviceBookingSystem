@@ -3,20 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back.models.Cards;
 
-/// <summary>
-/// Kártyák
-/// </summary>
-[Table("Card")]
-public class Card : BaseModel{
+public class CardGetResponse: BaseResponse{
     
-
     /// <summary>
     /// Aktív-e a kártya
     /// </summary>
     /// <value>bool</value>
-    [Required]
     public bool IsActive { get; set; }
-
 
     /// <summary>
     /// Lejárati Dátum
@@ -30,9 +23,6 @@ public class Card : BaseModel{
     /// <value>int</value>
     [Required]
     public Guid OwnerId { get; set; }
-
-    [ForeignKey("OwnerId")]
-    public virtual back.models.Persons.Person Owner { get; set; }
 
      /// <summary>
     /// megjegyzés
