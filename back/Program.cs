@@ -1,7 +1,5 @@
 using back.Data.ApplicationDbContext;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

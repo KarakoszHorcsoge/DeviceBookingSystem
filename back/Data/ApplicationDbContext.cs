@@ -7,6 +7,12 @@ using back.models.Cards;
 using back.models.DelayedEvents;
 using back.models.Devices;
 using back.models.DeviceTypes;
+using back.models.EventLogs;
+using back.models.Persons;
+using back.models.PersonGroups;
+using back.models.PersonTypes;
+using back.models.Preferences;
+using back.models.Receptions;
 
 namespace back.Data.ApplicationDbContext;
 
