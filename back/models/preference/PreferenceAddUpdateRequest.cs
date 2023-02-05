@@ -17,4 +17,8 @@ public class PreferenceAddUpdateRequest : BaseRequest{
     /// <value>1 string 100</value>
     [Required,MinLength(1),MaxLength(100)]
     public string Value { get; set; }
+
+    [Required]
+    public Guid AdministratorId {get; set;}
+
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -24,10 +23,11 @@ namespace back.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    AuthorotyId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    AuthorotyId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -37,7 +37,13 @@ namespace back.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Administrator_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -46,12 +52,13 @@ namespace back.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    name = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false)
+                    Name = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    authorotyLevel = table.Column<int>(type: "int", nullable: false),
+                    AuthorotyLevel = table.Column<int>(type: "int", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -61,7 +68,13 @@ namespace back.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Authoroty_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -70,7 +83,6 @@ namespace back.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    DelayedEventId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ExecutionTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -80,7 +92,8 @@ namespace back.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -90,7 +103,13 @@ namespace back.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DelayedEvent_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -103,7 +122,8 @@ namespace back.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -113,7 +133,13 @@ namespace back.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DeviceType_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -121,42 +147,41 @@ namespace back.Migrations
                 name: "EventLog",
                 columns: table => new
                 {
-                    EventLogId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     CommandOriginId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    CommandParentId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    CommandParentId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     ExecutionTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     TargetType = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TargetId = table.Column<int>(type: "int", nullable: false),
-                    SecondTargetId = table.Column<int>(type: "int", nullable: false),
+                    SecondTargetId = table.Column<int>(type: "int", nullable: true),
                     CommandType = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Command = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ParentEventLogId = table.Column<int>(type: "int", nullable: true),
-                    ParentEventEventLogId = table.Column<int>(type: "int", nullable: false)
+                    ParentEventId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ChildEventId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EventLog", x => x.EventLogId);
+                    table.PrimaryKey("PK_EventLog", x => x.Id);
                     table.ForeignKey(
                         name: "FK_EventLog_Administrator_CommandOriginId",
                         column: x => x.CommandOriginId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_EventLog_Administrator_CommandParentId",
                         column: x => x.CommandParentId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_EventLog_EventLog_ParentEventEventLogId",
-                        column: x => x.ParentEventEventLogId,
+                        name: "FK_EventLog_EventLog_ParentEventId",
+                        column: x => x.ParentEventId,
                         principalTable: "EventLog",
-                        principalColumn: "EventLogId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -173,7 +198,8 @@ namespace back.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -183,7 +209,13 @@ namespace back.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PersonGroup_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -197,11 +229,12 @@ namespace back.Migrations
                     IsBorrowable = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CardPrefix = table.Column<string>(type: "varchar(2)", maxLength: 2, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Comment = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -211,7 +244,13 @@ namespace back.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PersonType_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -224,19 +263,33 @@ namespace back.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Value = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    AdministratorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Preference", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Preference_Administrator_AdministratorId",
+                        column: x => x.AdministratorId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Preference_Administrator_CreatorId",
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Preference_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -251,11 +304,12 @@ namespace back.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Comment = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    AdminId = table.Column<int>(type: "int", nullable: false),
-                    administrator = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    AdminId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    administrator = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -265,13 +319,19 @@ namespace back.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reception_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Reception_Administrator_administrator",
                         column: x => x.administrator,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -297,11 +357,12 @@ namespace back.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     comment = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PersonGroupId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    PersonTypeId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    PersonGroupId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    PersonTypeId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -311,19 +372,25 @@ namespace back.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Person_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Person_PersonGroup_PersonGroupId",
                         column: x => x.PersonGroupId,
                         principalTable: "PersonGroup",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Person_PersonType_PersonTypeId",
                         column: x => x.PersonTypeId,
                         principalTable: "PersonType",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -333,29 +400,42 @@ namespace back.Migrations
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    ExperationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    comment = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    ExperationDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    OwnerId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    Comment = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    AdministratorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Card", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Card_Administrator_AdministratorId",
+                        column: x => x.AdministratorId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Card_Administrator_CreatorId",
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Card_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Card_Person_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "Person",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -368,12 +448,13 @@ namespace back.Migrations
                     Comment = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DeviceTypeId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    ReceptionId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ReceptionId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     PosesserId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     PersonId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -383,25 +464,31 @@ namespace back.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Device_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Device_DeviceType_DeviceTypeId",
                         column: x => x.DeviceTypeId,
                         principalTable: "DeviceType",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Device_Person_PersonId",
                         column: x => x.PersonId,
                         principalTable: "Person",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Device_Reception_ReceptionId",
                         column: x => x.ReceptionId,
                         principalTable: "Reception",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -412,13 +499,14 @@ namespace back.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     StartTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ReceptionId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    DeviceId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    DeviceTypeId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ReceptionId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    DeviceId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    DeviceTypeId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     Amount = table.Column<int>(type: "int", nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -428,7 +516,13 @@ namespace back.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Administrator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_BorrowRestriction_Administrator_ModifierId",
+                        column: x => x.ModifierId,
+                        principalTable: "Administrator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BorrowRestriction_DeviceType_DeviceTypeId",
                         column: x => x.DeviceTypeId,
@@ -446,7 +540,7 @@ namespace back.Migrations
                         column: x => x.ReceptionId,
                         principalTable: "Reception",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -461,9 +555,25 @@ namespace back.Migrations
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Administrator_ModifierId",
+                table: "Administrator",
+                column: "ModifierId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Authoroty_CreatorId",
                 table: "Authoroty",
                 column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Authoroty_ModifierId",
+                table: "Authoroty",
+                column: "ModifierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Authoroty_Name",
+                table: "Authoroty",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BorrowRestriction_CreatorId",
@@ -481,14 +591,29 @@ namespace back.Migrations
                 column: "DeviceTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BorrowRestriction_ModifierId",
+                table: "BorrowRestriction",
+                column: "ModifierId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BorrowRestriction_ReceptionId",
                 table: "BorrowRestriction",
                 column: "ReceptionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Card_AdministratorId",
+                table: "Card",
+                column: "AdministratorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Card_CreatorId",
                 table: "Card",
                 column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Card_ModifierId",
+                table: "Card",
+                column: "ModifierId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Card_OwnerId",
@@ -501,6 +626,11 @@ namespace back.Migrations
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DelayedEvent_ModifierId",
+                table: "DelayedEvent",
+                column: "ModifierId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Device_CreatorId",
                 table: "Device",
                 column: "CreatorId");
@@ -509,6 +639,11 @@ namespace back.Migrations
                 name: "IX_Device_DeviceTypeId",
                 table: "Device",
                 column: "DeviceTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Device_ModifierId",
+                table: "Device",
+                column: "ModifierId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Device_PersonId",
@@ -526,6 +661,11 @@ namespace back.Migrations
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DeviceType_ModifierId",
+                table: "DeviceType",
+                column: "ModifierId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EventLog_CommandOriginId",
                 table: "EventLog",
                 column: "CommandOriginId");
@@ -536,14 +676,20 @@ namespace back.Migrations
                 column: "CommandParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EventLog_ParentEventEventLogId",
+                name: "IX_EventLog_ParentEventId",
                 table: "EventLog",
-                column: "ParentEventEventLogId");
+                column: "ParentEventId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Person_CreatorId",
                 table: "Person",
                 column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Person_ModifierId",
+                table: "Person",
+                column: "ModifierId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Person_PersonGroupId",
@@ -561,14 +707,34 @@ namespace back.Migrations
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PersonGroup_ModifierId",
+                table: "PersonGroup",
+                column: "ModifierId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PersonType_CreatorId",
                 table: "PersonType",
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PersonType_ModifierId",
+                table: "PersonType",
+                column: "ModifierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Preference_AdministratorId",
+                table: "Preference",
+                column: "AdministratorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Preference_CreatorId",
                 table: "Preference",
                 column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Preference_ModifierId",
+                table: "Preference",
+                column: "ModifierId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reception_administrator",
@@ -580,13 +746,18 @@ namespace back.Migrations
                 table: "Reception",
                 column: "CreatorId");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_Reception_ModifierId",
+                table: "Reception",
+                column: "ModifierId");
+
             migrationBuilder.AddForeignKey(
                 name: "FK_Administrator_Authoroty_AuthorotyId",
                 table: "Administrator",
                 column: "AuthorotyId",
                 principalTable: "Authoroty",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />

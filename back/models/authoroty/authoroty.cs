@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using back.models.Administrators;
 
 namespace back.models.Authorotys;
 /// <summary>
@@ -13,14 +15,15 @@ public class Authoroty : BaseModel
     /// név<br/>
     /// </summary>
     /// <value>1 string 45</value>
-    [Required, MinLength(1), MaxLength(45)]
-    public string name { get; set; }
+    [MinLength(1), MaxLength(45)]
+    public string Name { get; set; }
 
     /// <summary>
     /// jogosultsági szint
     /// </summary>
     /// <value>int</value>
-    [Required]
-    public int authorotyLevel { get; set; }
+    public int AuthorotyLevel { get; set; }
+
+    public virtual ICollection<Administrator> Administrators { get; set; }
 
 }

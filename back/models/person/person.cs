@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using back.models.Cards;
+using back.models.Devices;
 using back.models.PersonGroups;
 using back.models.PersonTypes;
 
@@ -15,14 +17,13 @@ public class Person : BaseModel{
     /// a személy neve
     /// </summary>
     /// <value>1 string 100</value>
-    [Required,MinLength(1),MaxLength(100)]
+    [ MinLength(1),MaxLength(100)]
     public string Name { get; set; }
 
     /// <summary>
     /// Tud-e kölcsönözni
     /// </summary>
     /// <value>bool</value>
-    [Required]
     public bool IsAbleToBorrow { get; set; }
 
     /// <summary>
@@ -44,35 +45,35 @@ public class Person : BaseModel{
     /// (pl személyigazolvány)
     /// </summary>
     /// <value>1 string 20</value>
-    [Required,MinLength(1),MaxLength(20)]
+    [ MinLength(1),MaxLength(20)]
     public string IdNumber { get; set; }
 
     /// <summary>
     /// igazolvány típusa
     /// </summary>
     /// <value>1 string 30</value>
-    [Required,MinLength(1),MaxLength(30)]
+    [ MinLength(1),MaxLength(30)]
     public string IdNumberType { get; set; }
 
     /// <summary>
     /// email cím
     /// </summary>
     /// <value>1 string 255</value>
-    [Required,MinLength(1),MaxLength(255)]
+    [ MinLength(1),MaxLength(255)]
     public string Email { get; set; }
 
     /// <summary>
     /// windows ad felhasználónév
     /// </summary>
     /// <value>6 string 20</value>
-    [Required,MinLength(6),MaxLength(20)]
+    [ MinLength(6),MaxLength(20)]
     public string AdUsername { get; set; }
 
     /// <summary>
     /// megjegyzések
     /// </summary>
     /// <value>string 100</value>
-    [Required,MaxLength(100)]
+    [ MaxLength(100)]
     public string comment { get; set; }
 
     /// <summary>
@@ -89,9 +90,11 @@ public class Person : BaseModel{
     /// pl.: Előadó, Hallgató,VIP stb
     /// </summary>
     /// <value>int</value>
-    [Required]
-    public Guid PersonTypeId { get; set; }
+    public Guid? PersonTypeId { get; set; }
 
     [ForeignKey("PersonTypeId")]
     public virtual PersonType PersonType { get; set; }
+
+    public virtual ICollection<Card> Cards {get; set;}
+    public virtual ICollection<Device> Devices {get; set;}
 }

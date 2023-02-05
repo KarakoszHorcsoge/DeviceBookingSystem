@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using back.enums.status;
+using back.models.BorrowRestrictions;
 using back.models.DeviceTypes;
 using back.models.Persons;
 using back.models.Receptions;
@@ -17,21 +18,19 @@ public class Device : BaseModel{
     /// az eszköz státusza
     /// </summary>
     /// <value>deviceStatus enum</value>
-    [Required]
     public DeviceStatus DeviceStatus { get; set; }
 
     /// <summary>
     /// Megjegyzés
     /// </summary>
     /// <value>string 255</value>
-    [Required,MaxLength(255)]
+    [MaxLength(255)]
     public string Comment { get; set; }
 
     /// <summary>
     /// eszköz tipusának id-ja
     /// </summary>
     /// <value>int</value>
-    [Required]
     public Guid DeviceTypeId { get; set; }
 
     [ForeignKey("DeviceTypeId")]
@@ -41,8 +40,7 @@ public class Device : BaseModel{
     /// porta id-ja
     /// </summary>
     /// <value>int</value>
-    [Required]
-    public Guid ReceptionId { get; set; }
+    public Guid? ReceptionId { get; set; }
 
     [ForeignKey("ReceptionId")]
     public virtual Reception Reception { get; set; }
@@ -54,5 +52,7 @@ public class Device : BaseModel{
     public Guid? PosesserId { get; set; }
 
     [ForeignKey("PersonId")]
-    public virtual back.models.Persons.Person Posesser { get; set; }
+    public virtual Person Posesser { get; set; }
+
+    public virtual ICollection<BorrowRestriction> BorrowRestrictions { get; set; }
 }

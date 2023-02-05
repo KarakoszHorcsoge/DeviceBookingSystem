@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using back.models.Persons;
 
 namespace back.models.Cards;
 
@@ -14,7 +15,6 @@ public class Card : BaseModel{
     /// Aktív-e a kártya
     /// </summary>
     /// <value>bool</value>
-    [Required]
     public bool IsActive { get; set; }
 
 
@@ -28,16 +28,15 @@ public class Card : BaseModel{
     /// tulajdonos id
     /// </summary>
     /// <value>int</value>
-    [Required]
-    public Guid OwnerId { get; set; }
+    public Guid? OwnerId { get; set; }
 
     [ForeignKey("OwnerId")]
-    public virtual back.models.Persons.Person Owner { get; set; }
+    public virtual Person Owner { get; set; }
 
      /// <summary>
     /// megjegyzés
     /// </summary>
     /// <value>string 255</value>
-    [Required,MaxLength(255)]
+    [MaxLength(255)]
     public string Comment { get; set; }
 }

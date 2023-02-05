@@ -16,22 +16,19 @@ public class BorrowRestriction : BaseModel{
     /// kezdeti idő
     /// </summary>
     /// <value>DateTime</value>
-    [Required]
     public DateTime StartTime { get; set; }
 
     /// <summary>
     /// befejezési idő
     /// </summary>
     /// <value>DateTime</value>
-    [Required]
     public DateTime EndTime { get; set; }
 
     /// <summary>
     /// Porta id-ja
     /// </summary>
     /// <value>int</value>
-    [Required]
-    public Guid ReceptionId { get; set; }
+    public Guid? ReceptionId { get; set; }
 
     [ForeignKey("ReceptionId")]
     public virtual Reception Reception { get; set; }

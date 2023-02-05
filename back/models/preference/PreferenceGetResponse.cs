@@ -16,4 +16,6 @@ public class PreferenceGetResponse : BaseResponse{
     /// <value>1 string 100</value>
     public string Value { get; set; }
 
+    [Required]
+    public Guid AdministratorId {get; set;}
 }

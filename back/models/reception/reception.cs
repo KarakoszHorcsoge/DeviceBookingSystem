@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using back.models.Administrators;
+using back.models.BorrowRestrictions;
+using back.models.Devices;
 
 namespace back.models.Receptions;
 
@@ -14,30 +17,32 @@ public class Reception : BaseModel{
     /// porta id-ja
     /// </summary>
     /// <value>1 string 50</value>
-    [Required, MinLength(1),MaxLength(50)]
+    [MinLength(1),MaxLength(50)]
     public string Name { get; set; }
 
     /// <summary>
     /// Porta címe
     /// </summary>
     /// <value>1 string 100</value>
-    [Required, MinLength(1),MaxLength(100)]
+    [MinLength(1),MaxLength(100)]
     public string Address { get; set; }
 
     /// <summary>
     /// megjegyzések
     /// </summary>
     /// <value>string 255</value>
-    [Required, MaxLength(255)]
+    [MaxLength(255)]
     public string Comment { get; set; }
 
     /// <summary>
     /// A portáért felelős rendszergazda
     /// </summary>
     /// <value>int</value>
-    [Required]
-    public int AdminId { get; set; }
+    public Guid? AdminId { get; set; }
 
     [ForeignKey("administrator")]
     public virtual Administrator Admin { get; set; }
+
+    public virtual ICollection<Device> Devices { get; set; }
+    public virtual ICollection<BorrowRestriction> BorrowRestrictions { get; set; }
 }

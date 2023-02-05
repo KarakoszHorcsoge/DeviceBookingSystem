@@ -10,14 +10,13 @@ namespace back.models.EventLogs;
         /// event log id-ja
         /// </summary>
         /// <value>int autoincrement</value>
-        [Required,Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int EventLogId { get; set; }
+        [ Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         /// <summary>
         /// parancs létrehozoója, az eredeti
         /// </summary>
         /// <value>int</value>
-        [Required]
         public Guid CommandOriginId { get; set; }
 
         [ForeignKey("CommandOriginId")]
@@ -27,8 +26,7 @@ namespace back.models.EventLogs;
         /// parancs szülője 'közvetlen kiadója'
         /// </summary>
         /// <value>int</value>
-        [Required]
-        public Guid CommandParentId { get; set; }
+        public Guid? CommandParentId { get; set; }
 
         [ForeignKey("CommandParentId")]
         public virtual Administrator CommandParent { get; set; }
@@ -37,7 +35,6 @@ namespace back.models.EventLogs;
         /// lefutási idő
         /// </summary>
         /// <value>Datetime</value>
-        [Required]
         public DateTime ExecutionTime { get; set; }
 
         /// <summary>
@@ -45,42 +42,50 @@ namespace back.models.EventLogs;
         /// pl.: admin,person,personGroup stb
         /// </summary>
         /// <value>string</value>
-        [Required,MinLength(1),MaxLength(20)]
+        [ MinLength(1),MaxLength(20)]
         public string TargetType { get; set; }
 
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        [Required]
         public int TargetId { get; set; }
 
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        [Required]
         public int? SecondTargetId { get; set; }
 
         /// <summary>
         /// parancs típusa
         /// </summary>
         /// <value>1 string 50</value>
-        [Required,MinLength(1),MaxLength(50)]
+        [ MinLength(1),MaxLength(50)]
         public string CommandType { get; set; }
 
         /// <summary>
         /// Maga a lefuttatott sql parancs
         /// </summary>
         /// <value>1 string 1000</value>
-        [Required,MinLength(1),MaxLength(1000)]
+        [ MinLength(1),MaxLength(1000)]
         public string Command { get; set; }
 
         /// <summary>
         /// A szülő event id-ja
         /// </summary>
         /// <value>nullable int</value>
-        public int? ParentEventLogId { get; set; }
+        public Guid? ParentEventId { get; set; }
 
+        [ForeignKey("ParentEventId")]
         public virtual EventLog ParentEvent { get; set; }
+
+        /// <summary>
+        /// A szülő event id-ja
+        /// </summary>
+        /// <value>nullable int</value>
+        public Guid? ChildEventId { get; set; }
+
+        [ForeignKey("ChildEventId")]
+        public virtual EventLog ChildEvent { get; set; }
     }
