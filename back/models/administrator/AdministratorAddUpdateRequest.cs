@@ -26,4 +26,5 @@ public class AdministratorAddUpdateRequest : BaseRequest
     /// <value>int</value>
     [Required]
     public Guid AuthorotyId { get; set; }
+
 }

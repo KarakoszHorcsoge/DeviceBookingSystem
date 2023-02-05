@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using back.models.Authorotys;
 
 namespace back.models.Administrators;
 
@@ -22,4 +23,6 @@ public class AdministratorGetResponse:BaseResponse
     /// </summary>
     /// <value>int</value>
     public Guid AuthorotyId { get; set; }
+
+    public virtual Authoroty Authoroty {get; set;}
 }

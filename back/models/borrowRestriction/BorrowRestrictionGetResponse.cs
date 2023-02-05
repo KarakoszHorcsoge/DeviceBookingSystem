@@ -1,3 +1,7 @@
+using back.models.Devices;
+using back.models.DeviceTypes;
+using back.models.Receptions;
+
 namespace back.models.BorrowRestrictions;
 
 public class BorrowRestrictionGetResponse : BaseResponse
@@ -20,17 +24,23 @@ public class BorrowRestrictionGetResponse : BaseResponse
     /// <value>int</value>
     public Guid ReceptionId { get; set; }
 
+    public virtual Reception Reception { get; set; }
+
     /// <summary>
     /// eszköz id-ja
     /// </summary>
     /// <value>nullable int</value>
     public Guid? DeviceId { get; set; }
 
+    public virtual Device Device { get; set; } 
+
     /// <summary>
     /// eszköz típusának id-ja
     /// </summary>
     /// <value>nullable int</value>
     public Guid? DeviceTypeId { get; set; }
+
+    public virtual DeviceType DeviceType { get; set; }
 
     /// <summary>
     /// if device type is added need an amount

@@ -24,7 +24,7 @@ public class ApplicationDbContext : DbContext
     { }
 
     public DbSet<Administrator> Administrators { get; set; }
-    public DbSet<Authoroty> Authoroties { get; set; }
+    public DbSet<Authoroty> Authorotys { get; set; }
     public DbSet<BorrowRestriction> BorrowRestrictions { get; set; }
     public DbSet<Card> Cards { get; set; }
     public DbSet<DelayedEvent> DelayedEvents { get; set; }

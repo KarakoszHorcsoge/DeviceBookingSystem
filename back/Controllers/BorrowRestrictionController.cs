@@ -1,6 +1,6 @@
 using back.Data.ApplicationDbContext;
 using back.models;
-using back.models.Preferences;
+using back.models.BorrowRestrictions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,9 +8,9 @@ namespace back.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PreferenceController : ControllerBase
+public class BorrowRestrictionController : ControllerBase
 {
-    public PreferenceController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
+    public BorrowRestrictionController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
     {
         this.db = db;
         _logger = logger;
@@ -21,20 +21,37 @@ public class PreferenceController : ControllerBase
     private readonly ILogger<WeatherForecastController> _logger;
 
     [HttpGet]
-    [ProducesResponseType(typeof(PreferenceGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(BorrowRestrictionGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            var result = db.Preferences.AsNoTracking()
-            .Select(p => new PreferenceGetResponse
+            var result = db.BorrowRestrictions.AsNoTracking()
+            .AsSplitQuery()
+            .Include(r => r.Creator)
+            .Include(r => r.Modifier)
+            .Include(r => r.Reception)
+            .Include(r => r.Device)
+            .Include(r => r.DeviceType)
+            .Select(r => new BorrowRestrictionGetResponse
             {
-                Id = (Guid)p.Id,
-                Name = p.Name,
-                Value = p.Value,
+                Id = (Guid)r.Id,
+                StartTime = r.StartTime,
+                EndTime = r.EndTime,
+                ReceptionId = (Guid)r.ReceptionId!,
+                Reception = r.Reception,
+                DeviceId = r.DeviceId,
+                Device = r.Device,
+                DeviceTypeId = r.DeviceTypeId,
+                DeviceType = r.DeviceType,
 
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                Modifier = r.Modifier
             });
             return Ok(await result.ToListAsync());
         }
@@ -50,7 +67,7 @@ public class PreferenceController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(PreferenceGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(BorrowRestrictionGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
@@ -59,14 +76,32 @@ public class PreferenceController : ControllerBase
     {
         try
         {
-            var result = db.Preferences.AsNoTracking()
-               .Where(p => p.Id == id)
-               .Select(p => new PreferenceGetResponse
-               {
-                   Id = (Guid)p.Id,
-                   Name = p.Name,
-                   Value = p.Value,
-               }).SingleOrDefaultAsync();
+            var result = db.BorrowRestrictions.AsNoTracking()
+            .Where(p => p.Id == id)
+            .AsSplitQuery()
+            .Include(r => r.Creator)
+            .Include(r => r.Modifier)
+            .Include(r => r.Reception)
+            .Include(r => r.Device)
+            .Include(r => r.DeviceType)
+            .Select(r => new BorrowRestrictionGetResponse
+            {
+                Id = (Guid)r.Id,
+                StartTime = r.StartTime,
+                EndTime = r.EndTime,
+                ReceptionId = (Guid)r.ReceptionId!,
+                Reception = r.Reception,
+                DeviceId = r.DeviceId,
+                Device = r.Device,
+                DeviceTypeId = r.DeviceTypeId,
+                DeviceType = r.DeviceType,
+
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                Modifier = r.Modifier
+            }).SingleOrDefaultAsync();
 
             if (result != null)
             {
@@ -94,11 +129,11 @@ public class PreferenceController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(PreferenceGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(BorrowRestrictionGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Add([FromBody] PreferenceAddUpdateRequest request)
+    public async Task<IActionResult> Add([FromBody] BorrowRestrictionAddUpdateRequest request)
     {
         try
         {
@@ -108,23 +143,29 @@ public class PreferenceController : ControllerBase
                 {
                     IsSuccesfull = false,
                     MSG = ModelState.Select(x => x.Value!.Errors)
-                           .Where(y=>y.Count>0)
-                           .ToList().ToString() !,
+                           .Where(y => y.Count > 0)
+                           .ToList().ToString()!,
                     ResponseCode = 400
                 }); ;
             }
-            var preference = new Preference()
+            var BorrowRestriction = new BorrowRestriction()
             {
+                StartTime = request.StartTime,
+                EndTime = request.EndTime,
+                ReceptionId = (Guid)request.ReceptionId!,
+                DeviceId = request.DeviceId,
+                DeviceTypeId = request.DeviceTypeId,
 
-                Name = request.Name,
-                Value = request.Value,
+                ModifierId = null,
+                ModificationTime = request.OriginalSendTime,
+                CreatorId = null,
+                CreationTime = request.OriginalSendTime,
             };
 
-            db.Preferences.Add(preference);
+            db.BorrowRestrictions.Add(BorrowRestriction);
             await db.SaveChangesAsync();
 
-            return await GetOne(preference.Id);
-
+            return await GetOne(BorrowRestriction.Id);
         }
         catch (Exception ex)
         {
@@ -145,7 +186,7 @@ public class PreferenceController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] PreferenceAddUpdateRequest request)
+    public async Task<IActionResult> Update(Guid id, [FromBody] BorrowRestrictionAddUpdateRequest request)
     {
         try
         {
@@ -155,25 +196,15 @@ public class PreferenceController : ControllerBase
                 {
                     IsSuccesfull = false,
                     MSG = ModelState.Select(x => x.Value!.Errors)
-                           .Where(y=>y.Count>0)
-                           .ToList().ToString() !,
+                           .Where(y => y.Count > 0)
+                           .ToList().ToString()!,
                     ResponseCode = 400
                 }); ;
             }
 
-            var preference = await db.Preferences.SingleOrDefaultAsync(c => c.Id == id);
+            var BorrowRestriction = await db.BorrowRestrictions.SingleOrDefaultAsync(c => c.Id == id);
 
-            if (preference != null)
-            {
-                preference.Name = request.Name;
-                preference.Value = request.Value;
-
-                //preference.UpdateUserId = this.currentUserIdFromToken;
-                preference.ModificationTime = DateTime.Now;
-
-                await db.SaveChangesAsync();
-            }
-            else
+            if (BorrowRestriction == null)
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
@@ -181,8 +212,18 @@ public class PreferenceController : ControllerBase
                 });
             }
 
-            return await GetOne(preference.Id);
+            BorrowRestriction.StartTime = request.StartTime;
+            BorrowRestriction.EndTime = request.EndTime;
+            BorrowRestriction.ReceptionId = (Guid)request.ReceptionId!;
+            BorrowRestriction.DeviceId = request.DeviceId;
+            BorrowRestriction.DeviceTypeId = request.DeviceTypeId;
+            
+            BorrowRestriction.ModifierId = null;
+            BorrowRestriction.ModificationTime = request.OriginalSendTime;
 
+            await db.SaveChangesAsync();
+            
+            return await GetOne(BorrowRestriction.Id);
         }
         catch (Exception ex)
         {
@@ -196,7 +237,7 @@ public class PreferenceController : ControllerBase
     }
 
     [HttpDelete("{ids}")]
-    [ProducesResponseType( StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
@@ -204,17 +245,19 @@ public class PreferenceController : ControllerBase
     {
         try
         {
-            var preferencesToRemove = await db.Preferences.Where(ic => ids.Contains(ic.Id)).ToListAsync();
-            
-            if(!preferencesToRemove.Any()){
-               return StatusCode(404, new BaseRequestResponse(){
+            var BorrowRestrictionsToRemove = await db.BorrowRestrictions.Where(ic => ids.Contains(ic.Id)).ToListAsync();
+
+            if (!BorrowRestrictionsToRemove.Any())
+            {
+                return StatusCode(404, new BaseRequestResponse()
+                {
                     IsSuccesfull = false,
-                    MSG="Can't find.",
-                    ResponseCode=404
-               });               
+                    MSG = "Can't find.",
+                    ResponseCode = 404
+                });
             }
 
-            db.Preferences.RemoveRange(preferencesToRemove);
+            db.BorrowRestrictions.RemoveRange(BorrowRestrictionsToRemove);
 
             await db.SaveChangesAsync();
             return Ok();
@@ -225,7 +268,7 @@ public class PreferenceController : ControllerBase
             {
                 IsSuccesfull = false,
                 MSG = ex.Message,
-                ResponseCode=500
+                ResponseCode = 500
             });
         }
     }

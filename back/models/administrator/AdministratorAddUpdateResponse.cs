@@ -3,5 +3,5 @@ namespace back.models.Administrators;
 
 public class AdministratorAddUpdateResponse : BaseRequestResponse
 {
-    AdministratorGetResponse Administrator { get; set;}
+    public AdministratorGetResponse Administrator { get; set;}
 }

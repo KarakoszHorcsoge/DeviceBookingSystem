@@ -1,6 +1,6 @@
 using back.Data.ApplicationDbContext;
 using back.models;
-using back.models.Preferences;
+using back.models.Administrators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,9 +8,9 @@ namespace back.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PreferenceController : ControllerBase
+public class AdministratorController : ControllerBase
 {
-    public PreferenceController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
+    public AdministratorController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
     {
         this.db = db;
         _logger = logger;
@@ -21,20 +21,22 @@ public class PreferenceController : ControllerBase
     private readonly ILogger<WeatherForecastController> _logger;
 
     [HttpGet]
-    [ProducesResponseType(typeof(PreferenceGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            var result = db.Preferences.AsNoTracking()
-            .Select(p => new PreferenceGetResponse
+            var result = db.Administrators.AsNoTracking()
+            .Include(a => a.Authoroty)
+            .Select(a => new AdministratorGetResponse
             {
-                Id = (Guid)p.Id,
-                Name = p.Name,
-                Value = p.Value,
-
+                Id = (Guid)a.Id,
+                Name = a.Name,
+                Email = a.Email,
+                AuthorotyId = (Guid)a.AuthorotyId!,
+                Authoroty = a.Authoroty,                
             });
             return Ok(await result.ToListAsync());
         }
@@ -50,7 +52,7 @@ public class PreferenceController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(PreferenceGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
@@ -59,14 +61,18 @@ public class PreferenceController : ControllerBase
     {
         try
         {
-            var result = db.Preferences.AsNoTracking()
+            var result = db.Administrators.AsNoTracking()
                .Where(p => p.Id == id)
-               .Select(p => new PreferenceGetResponse
-               {
-                   Id = (Guid)p.Id,
-                   Name = p.Name,
-                   Value = p.Value,
-               }).SingleOrDefaultAsync();
+               .Include(a => a.Authoroty)
+                .Select(a => new AdministratorGetResponse
+                {
+                    Id = (Guid)a.Id,
+                    Name = a.Name,
+                    Email = a.Email,
+                    AuthorotyId = (Guid)a.AuthorotyId!,
+                    Authoroty = a.Authoroty
+
+                }).SingleOrDefaultAsync();
 
             if (result != null)
             {
@@ -94,11 +100,11 @@ public class PreferenceController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(PreferenceGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Add([FromBody] PreferenceAddUpdateRequest request)
+    public async Task<IActionResult> Add([FromBody] AdministratorAddUpdateRequest request)
     {
         try
         {
@@ -108,23 +114,27 @@ public class PreferenceController : ControllerBase
                 {
                     IsSuccesfull = false,
                     MSG = ModelState.Select(x => x.Value!.Errors)
-                           .Where(y=>y.Count>0)
-                           .ToList().ToString() !,
+                           .Where(y => y.Count > 0)
+                           .ToList().ToString()!,
                     ResponseCode = 400
-                }); ;
+                });
             }
-            var preference = new Preference()
+            var Administrator = new Administrator()
             {
 
                 Name = request.Name,
-                Value = request.Value,
+                Email = request.Email,
+                AuthorotyId = request.AuthorotyId,
+
+                ModificationTime = request.OriginalSendTime,
+                
+                CreationTime = request.OriginalSendTime,
             };
 
-            db.Preferences.Add(preference);
+            db.Administrators.Add(Administrator);
             await db.SaveChangesAsync();
 
-            return await GetOne(preference.Id);
-
+            return await GetOne(Administrator.Id);
         }
         catch (Exception ex)
         {
@@ -145,7 +155,7 @@ public class PreferenceController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] PreferenceAddUpdateRequest request)
+    public async Task<IActionResult> Update(Guid id, [FromBody] AdministratorAddUpdateRequest request)
     {
         try
         {
@@ -155,34 +165,31 @@ public class PreferenceController : ControllerBase
                 {
                     IsSuccesfull = false,
                     MSG = ModelState.Select(x => x.Value!.Errors)
-                           .Where(y=>y.Count>0)
-                           .ToList().ToString() !,
+                           .Where(y => y.Count > 0)
+                           .ToList().ToString()!,
                     ResponseCode = 400
                 }); ;
             }
 
-            var preference = await db.Preferences.SingleOrDefaultAsync(c => c.Id == id);
+            var Administrator = await db.Administrators.SingleOrDefaultAsync(c => c.Id == id);
 
-            if (preference != null)
-            {
-                preference.Name = request.Name;
-                preference.Value = request.Value;
-
-                //preference.UpdateUserId = this.currentUserIdFromToken;
-                preference.ModificationTime = DateTime.Now;
-
-                await db.SaveChangesAsync();
-            }
-            else
+            if (Administrator == null)
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
                     IsSuccesfull = false
                 });
             }
+            Administrator.Name = request.Name;
+            Administrator.Email = request.Email;
+            Administrator.AuthorotyId = request.AuthorotyId;
 
-            return await GetOne(preference.Id);
+            //Administrator.UpdateUserId = this.currentUserIdFromToken;
+            Administrator.ModificationTime = request.OriginalSendTime;
 
+            await db.SaveChangesAsync();
+            
+            return await GetOne(Administrator.Id);
         }
         catch (Exception ex)
         {
@@ -196,7 +203,7 @@ public class PreferenceController : ControllerBase
     }
 
     [HttpDelete("{ids}")]
-    [ProducesResponseType( StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
@@ -204,17 +211,19 @@ public class PreferenceController : ControllerBase
     {
         try
         {
-            var preferencesToRemove = await db.Preferences.Where(ic => ids.Contains(ic.Id)).ToListAsync();
-            
-            if(!preferencesToRemove.Any()){
-               return StatusCode(404, new BaseRequestResponse(){
+            var AdministratorsToRemove = await db.Administrators.Where(ic => ids.Contains(ic.Id)).ToListAsync();
+
+            if (!AdministratorsToRemove.Any())
+            {
+                return StatusCode(404, new BaseRequestResponse()
+                {
                     IsSuccesfull = false,
-                    MSG="Can't find.",
-                    ResponseCode=404
-               });               
+                    MSG = "Can't find.",
+                    ResponseCode = 404
+                });
             }
 
-            db.Preferences.RemoveRange(preferencesToRemove);
+            db.Administrators.RemoveRange(AdministratorsToRemove);
 
             await db.SaveChangesAsync();
             return Ok();
@@ -225,7 +234,7 @@ public class PreferenceController : ControllerBase
             {
                 IsSuccesfull = false,
                 MSG = ex.Message,
-                ResponseCode=500
+                ResponseCode = 500
             });
         }
     }
