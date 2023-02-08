@@ -1,6 +1,6 @@
 using back.DbContexts.ApplicationDbContext;
 using back.models;
-using back.models.Authorotys;
+using back.models.Cards;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,9 +8,9 @@ namespace back.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AuthorotyController : ControllerBase
+public class CardController : ControllerBase
 {
-    public AuthorotyController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
+    public CardController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
     {
         this.db = db;
         _logger = logger;
@@ -21,21 +21,23 @@ public class AuthorotyController : ControllerBase
     private readonly ILogger<WeatherForecastController> _logger;
 
     [HttpGet]
-    [ProducesResponseType(typeof(AuthorotyGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CardGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            var result = db.Authorotys.AsNoTracking()
-            .Include(r => r.Creator)
-            .Include(r => r.Modifier)
-            .Select(r => new AuthorotyGetResponse
+            var result = db.Cards.AsNoTracking()
+            .Include(r=>r.Owner)
+            .Select(r => new CardGetResponse
             {
                 Id = (Guid)r.Id,
-                Name = r.Name,
-                AuthorotyLevel = r.AuthorotyLevel,
+                IsActive = r.IsActive,
+                ExperationDate = r.ExperationDate,
+                OwnerId = (Guid)r.OwnerId!,
+                Owner = r.Owner,
+                Comment = r.Comment,
 
                 CreationTime = r.CreationTime,
                 CreatorId = r.CreatorId,
@@ -57,7 +59,7 @@ public class AuthorotyController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(AuthorotyGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CardGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
@@ -66,15 +68,17 @@ public class AuthorotyController : ControllerBase
     {
         try
         {
-            var result = db.Authorotys.AsNoTracking()
+            var result = db.Cards.AsNoTracking()
             .Where(p => p.Id == id)
-            .Include(r => r.Creator)
-            .Include(r => r.Modifier)
-            .Select(r => new AuthorotyGetResponse
+            .Include(r=>r.Owner)
+            .Select(r => new CardGetResponse
             {
                 Id = (Guid)r.Id,
-                Name = r.Name,
-                AuthorotyLevel = r.AuthorotyLevel,
+                IsActive = r.IsActive,
+                ExperationDate = r.ExperationDate,
+                OwnerId = (Guid)r.OwnerId!,
+                Owner = r.Owner,
+                Comment = r.Comment,
 
                 CreationTime = r.CreationTime,
                 CreatorId = r.CreatorId,
@@ -109,11 +113,11 @@ public class AuthorotyController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(AuthorotyGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CardGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Add([FromBody] AuthorotyAddUpdateRequest request)
+    public async Task<IActionResult> Add([FromBody] CardAddUpdateRequest request)
     {
         try
         {
@@ -128,10 +132,12 @@ public class AuthorotyController : ControllerBase
                     ResponseCode = 400
                 }); ;
             }
-            var Authoroty = new Authoroty()
+            var Card = new Card()
             {
-                Name = request.Name,
-                AuthorotyLevel = request.AuthorotyLevel,
+                IsActive = request.IsActive ?? true,
+                ExperationDate = request.ExperationDate,
+                OwnerId = (Guid)request.OwnerId!,
+                Comment = request.Comment,
 
                 ModifierId = null,
                 ModificationTime = request.OriginalSendTime,
@@ -139,10 +145,10 @@ public class AuthorotyController : ControllerBase
                 CreationTime = request.OriginalSendTime,
             };
 
-            db.Authorotys.Add(Authoroty);
+            db.Cards.Add(Card);
             await db.SaveChangesAsync();
 
-            return await GetOne(Authoroty.Id);
+            return await GetOne(Card.Id);
         }
         catch (Exception ex)
         {
@@ -163,7 +169,7 @@ public class AuthorotyController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] AuthorotyAddUpdateRequest request)
+    public async Task<IActionResult> Update(Guid id, [FromBody] CardAddUpdateRequest request)
     {
         try
         {
@@ -179,9 +185,9 @@ public class AuthorotyController : ControllerBase
                 }); ;
             }
 
-            var Authoroty = await db.Authorotys.SingleOrDefaultAsync(c => c.Id == id);
+            var Card = await db.Cards.SingleOrDefaultAsync(c => c.Id == id);
 
-            if (Authoroty == null)
+            if (Card == null)
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
@@ -189,15 +195,17 @@ public class AuthorotyController : ControllerBase
                 });
             }
 
-            Authoroty.Name = request.Name;
-            Authoroty.AuthorotyLevel = request.AuthorotyLevel;
-
-            Authoroty.ModifierId = null;
-            Authoroty.ModificationTime = request.OriginalSendTime;
+            Card.IsActive = request.IsActive ?? true;
+            Card.ExperationDate = request.ExperationDate;
+            Card.OwnerId = (Guid)request.OwnerId!;
+            Card.Comment = request.Comment;
+            
+            Card.ModifierId = null;
+            Card.ModificationTime = request.OriginalSendTime;
 
             await db.SaveChangesAsync();
             
-            return await GetOne(Authoroty.Id);
+            return await GetOne(Card.Id);
         }
         catch (Exception ex)
         {
@@ -219,9 +227,9 @@ public class AuthorotyController : ControllerBase
     {
         try
         {
-            var AuthorotysToRemove = await db.Authorotys.Where(ic => ids.Contains(ic.Id)).ToListAsync();
+            var CardsToRemove = await db.Cards.Where(ic => ids.Contains(ic.Id)).ToListAsync();
 
-            if (!AuthorotysToRemove.Any())
+            if (!CardsToRemove.Any())
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
@@ -231,7 +239,7 @@ public class AuthorotyController : ControllerBase
                 });
             }
 
-            db.Authorotys.RemoveRange(AuthorotysToRemove);
+            db.Cards.RemoveRange(CardsToRemove);
 
             await db.SaveChangesAsync();
             return Ok();

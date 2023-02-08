@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using back.models.Persons;
 
 namespace back.models.Cards;
 
@@ -21,13 +22,13 @@ public class CardGetResponse: BaseResponse{
     /// tulajdonos id
     /// </summary>
     /// <value>int</value>
-    [Required]
     public Guid OwnerId { get; set; }
 
-     /// <summary>
+    public Person Owner { get; set; }
+
+    /// <summary>
     /// megjegyzés
     /// </summary>
     /// <value>string 255</value>
-    [Required,MaxLength(255)]
     public string Comment { get; set; }
 }

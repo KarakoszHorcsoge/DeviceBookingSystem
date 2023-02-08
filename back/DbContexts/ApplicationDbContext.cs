@@ -14,7 +14,7 @@ using back.models.PersonTypes;
 using back.models.Preferences;
 using back.models.Receptions;
 
-namespace back.Data.ApplicationDbContext;
+namespace back.DbContexts.ApplicationDbContext;
 
 public class ApplicationDbContext : DbContext
 {

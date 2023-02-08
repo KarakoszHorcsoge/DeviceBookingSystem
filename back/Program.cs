@@ -1,4 +1,4 @@
-using back.Data.ApplicationDbContext;
+using back.DbContexts.ApplicationDbContext;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
