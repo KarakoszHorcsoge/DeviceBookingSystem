@@ -1,6 +1,6 @@
 using back.DbContexts.ApplicationDbContext;
 using back.models;
-using back.models.Administrators;
+using back.models.DelayedEvents;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,9 +8,9 @@ namespace back.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AdministratorController : ControllerBase
+public class DelayedEventController : ControllerBase
 {
-    public AdministratorController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
+    public DelayedEventController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
     {
         this.db = db;
         _logger = logger;
@@ -21,22 +21,27 @@ public class AdministratorController : ControllerBase
     private readonly ILogger<WeatherForecastController> _logger;
 
     [HttpGet]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DelayedEventGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            var result = db.Administrators.AsNoTracking()
-            .Include(a => a.Authoroty)
-            .Select(a => new AdministratorGetResponse
+            var result = db.DelayedEvents.AsNoTracking()
+            .Select(r => new DelayedEventGetResponse
             {
-                Id = (Guid)a.Id,
-                Name = a.Name,
-                Email = a.Email,
-                AuthorotyId = (Guid)a.AuthorotyId!,
-                Authoroty = a.Authoroty,                
+                Id = (Guid)r.Id,
+                Name = r.Name,
+                ExecutionTime = r.ExecutionTime,
+                Command =r.Command,
+                Comment = r.Comment,
+
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                Modifier = r.Modifier
             });
             return Ok(await result.ToListAsync());
         }
@@ -52,7 +57,7 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DelayedEventGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
@@ -61,18 +66,22 @@ public class AdministratorController : ControllerBase
     {
         try
         {
-            var result = db.Administrators.AsNoTracking()
-               .Where(p => p.Id == id)
-               .Include(a => a.Authoroty)
-                .Select(a => new AdministratorGetResponse
-                {
-                    Id = (Guid)a.Id,
-                    Name = a.Name,
-                    Email = a.Email,
-                    AuthorotyId = (Guid)a.AuthorotyId!,
-                    Authoroty = a.Authoroty
+            var result = db.DelayedEvents.AsNoTracking()
+            .Where(p => p.Id == id)
+            .Select(r => new DelayedEventGetResponse
+            {
+                Id = (Guid)r.Id,
+                Name = r.Name,
+                ExecutionTime = r.ExecutionTime,
+                Command =r.Command,
+                Comment = r.Comment,
 
-                }).SingleOrDefaultAsync();
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                Modifier = r.Modifier
+            }).SingleOrDefaultAsync();
 
             if (result != null)
             {
@@ -100,11 +109,11 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DelayedEventGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Add([FromBody] AdministratorAddUpdateRequest request)
+    public async Task<IActionResult> Add([FromBody] DelayedEventAddUpdateRequest request)
     {
         try
         {
@@ -117,24 +126,25 @@ public class AdministratorController : ControllerBase
                            .Where(y => y.Count > 0)
                            .ToList().ToString()!,
                     ResponseCode = 400
-                });
+                }); ;
             }
-            var Administrator = new Administrator()
+            var DelayedEvent = new DelayedEvent()
             {
-
                 Name = request.Name,
-                Email = request.Email,
-                AuthorotyId = request.AuthorotyId,
+                ExecutionTime = request.ExecutionTime,
+                Command =request.Command,
+                Comment = request.Comment,
 
+                ModifierId = null,
                 ModificationTime = request.OriginalSendTime,
-                
+                CreatorId = null,
                 CreationTime = request.OriginalSendTime,
             };
 
-            db.Administrators.Add(Administrator);
+            db.DelayedEvents.Add(DelayedEvent);
             await db.SaveChangesAsync();
 
-            return await GetOne(Administrator.Id);
+            return await GetOne(DelayedEvent.Id);
         }
         catch (Exception ex)
         {
@@ -155,7 +165,7 @@ public class AdministratorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] AdministratorAddUpdateRequest request)
+    public async Task<IActionResult> Update(Guid id, [FromBody] DelayedEventAddUpdateRequest request)
     {
         try
         {
@@ -171,25 +181,27 @@ public class AdministratorController : ControllerBase
                 }); ;
             }
 
-            var Administrator = await db.Administrators.SingleOrDefaultAsync(c => c.Id == id);
+            var DelayedEvent = await db.DelayedEvents.SingleOrDefaultAsync(c => c.Id == id);
 
-            if (Administrator == null)
+            if (DelayedEvent == null)
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
                     IsSuccesfull = false
                 });
             }
-            Administrator.Name = request.Name;
-            Administrator.Email = request.Email;
-            Administrator.AuthorotyId = request.AuthorotyId;
 
-            //Administrator.UpdateUserId = this.currentUserIdFromToken;
-            Administrator.ModificationTime = request.OriginalSendTime;
+            DelayedEvent.Name = request.Name;
+            DelayedEvent.ExecutionTime = request.ExecutionTime;
+            DelayedEvent.Command =request.Command;
+            DelayedEvent.Comment = request.Comment;
+            
+            DelayedEvent.ModifierId = null;
+            DelayedEvent.ModificationTime = request.OriginalSendTime;
 
             await db.SaveChangesAsync();
             
-            return await GetOne(Administrator.Id);
+            return await GetOne(DelayedEvent.Id);
         }
         catch (Exception ex)
         {
@@ -211,9 +223,9 @@ public class AdministratorController : ControllerBase
     {
         try
         {
-            var AdministratorsToRemove = await db.Administrators.Where(ic => ids.Contains(ic.Id)).ToListAsync();
+            var DelayedEventsToRemove = await db.DelayedEvents.Where(ic => ids.Contains(ic.Id)).ToListAsync();
 
-            if (!AdministratorsToRemove.Any())
+            if (!DelayedEventsToRemove.Any())
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
@@ -223,7 +235,7 @@ public class AdministratorController : ControllerBase
                 });
             }
 
-            db.Administrators.RemoveRange(AdministratorsToRemove);
+            db.DelayedEvents.RemoveRange(DelayedEventsToRemove);
 
             await db.SaveChangesAsync();
             return Ok();

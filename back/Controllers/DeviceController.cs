@@ -1,6 +1,6 @@
 using back.DbContexts.ApplicationDbContext;
 using back.models;
-using back.models.Administrators;
+using back.models.Devices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,9 +8,9 @@ namespace back.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AdministratorController : ControllerBase
+public class DeviceController : ControllerBase
 {
-    public AdministratorController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
+    public DeviceController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
     {
         this.db = db;
         _logger = logger;
@@ -21,22 +21,33 @@ public class AdministratorController : ControllerBase
     private readonly ILogger<WeatherForecastController> _logger;
 
     [HttpGet]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DeviceGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            var result = db.Administrators.AsNoTracking()
-            .Include(a => a.Authoroty)
-            .Select(a => new AdministratorGetResponse
+            var result = db.Devices.AsNoTracking()
+            .Include(r => r.DeviceType)
+            .Include(r => r.Reception)
+            .Select(r => new DeviceGetResponse
             {
-                Id = (Guid)a.Id,
-                Name = a.Name,
-                Email = a.Email,
-                AuthorotyId = (Guid)a.AuthorotyId!,
-                Authoroty = a.Authoroty,                
+                Id = (Guid)r.Id,
+                DeviceStatus = r.DeviceStatus,
+                Comment = r.Comment,
+                DeviceTypeId =r.DeviceTypeId,
+                DeviceType = r.DeviceType,
+                ReceptionId = (Guid)r.ReceptionId!,
+                Reception = r.Reception,
+                PosesserId = r.PosesserId,
+                Posesser = r.Posesser,
+
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                Modifier = r.Modifier
             });
             return Ok(await result.ToListAsync());
         }
@@ -52,7 +63,7 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DeviceGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
@@ -61,18 +72,26 @@ public class AdministratorController : ControllerBase
     {
         try
         {
-            var result = db.Administrators.AsNoTracking()
-               .Where(p => p.Id == id)
-               .Include(a => a.Authoroty)
-                .Select(a => new AdministratorGetResponse
-                {
-                    Id = (Guid)a.Id,
-                    Name = a.Name,
-                    Email = a.Email,
-                    AuthorotyId = (Guid)a.AuthorotyId!,
-                    Authoroty = a.Authoroty
+            var result = db.Devices.AsNoTracking()
+            .Where(p => p.Id == id)
+            .Select(r => new DeviceGetResponse
+            {
+                Id = (Guid)r.Id,
+                DeviceStatus = r.DeviceStatus,
+                Comment = r.Comment,
+                DeviceTypeId =r.DeviceTypeId,
+                DeviceType = r.DeviceType,
+                ReceptionId = (Guid)r.ReceptionId!,
+                Reception = r.Reception,
+                PosesserId = r.PosesserId,
+                Posesser = r.Posesser,
 
-                }).SingleOrDefaultAsync();
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                Modifier = r.Modifier
+            }).SingleOrDefaultAsync();
 
             if (result != null)
             {
@@ -100,11 +119,11 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DeviceGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Add([FromBody] AdministratorAddUpdateRequest request)
+    public async Task<IActionResult> Add([FromBody] DeviceAddUpdateRequest request)
     {
         try
         {
@@ -117,24 +136,26 @@ public class AdministratorController : ControllerBase
                            .Where(y => y.Count > 0)
                            .ToList().ToString()!,
                     ResponseCode = 400
-                });
+                }); ;
             }
-            var Administrator = new Administrator()
+            var Device = new Device()
             {
+                DeviceStatus = request.DeviceStatus,
+                Comment = request.Comment,
+                DeviceTypeId =request.DeviceTypeId,
+                ReceptionId = (Guid)request.ReceptionId,
+                PosesserId = request.PosesserId,
 
-                Name = request.Name,
-                Email = request.Email,
-                AuthorotyId = request.AuthorotyId,
-
+                ModifierId = null,
                 ModificationTime = request.OriginalSendTime,
-                
+                CreatorId = null,
                 CreationTime = request.OriginalSendTime,
             };
 
-            db.Administrators.Add(Administrator);
+            db.Devices.Add(Device);
             await db.SaveChangesAsync();
 
-            return await GetOne(Administrator.Id);
+            return await GetOne(Device.Id);
         }
         catch (Exception ex)
         {
@@ -155,7 +176,7 @@ public class AdministratorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] AdministratorAddUpdateRequest request)
+    public async Task<IActionResult> Update(Guid id, [FromBody] DeviceAddUpdateRequest request)
     {
         try
         {
@@ -171,25 +192,28 @@ public class AdministratorController : ControllerBase
                 }); ;
             }
 
-            var Administrator = await db.Administrators.SingleOrDefaultAsync(c => c.Id == id);
+            var Device = await db.Devices.SingleOrDefaultAsync(c => c.Id == id);
 
-            if (Administrator == null)
+            if (Device == null)
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
                     IsSuccesfull = false
                 });
             }
-            Administrator.Name = request.Name;
-            Administrator.Email = request.Email;
-            Administrator.AuthorotyId = request.AuthorotyId;
 
-            //Administrator.UpdateUserId = this.currentUserIdFromToken;
-            Administrator.ModificationTime = request.OriginalSendTime;
+            Device.DeviceStatus = request.DeviceStatus;
+            Device.Comment = request.Comment;
+            Device.DeviceTypeId =request.DeviceTypeId;
+            Device.ReceptionId = (Guid)request.ReceptionId;
+            Device.PosesserId = request.PosesserId;
+            
+            Device.ModifierId = null;
+            Device.ModificationTime = request.OriginalSendTime;
 
             await db.SaveChangesAsync();
             
-            return await GetOne(Administrator.Id);
+            return await GetOne(Device.Id);
         }
         catch (Exception ex)
         {
@@ -211,9 +235,9 @@ public class AdministratorController : ControllerBase
     {
         try
         {
-            var AdministratorsToRemove = await db.Administrators.Where(ic => ids.Contains(ic.Id)).ToListAsync();
+            var DevicesToRemove = await db.Devices.Where(ic => ids.Contains(ic.Id)).ToListAsync();
 
-            if (!AdministratorsToRemove.Any())
+            if (!DevicesToRemove.Any())
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
@@ -223,7 +247,7 @@ public class AdministratorController : ControllerBase
                 });
             }
 
-            db.Administrators.RemoveRange(AdministratorsToRemove);
+            db.Devices.RemoveRange(DevicesToRemove);
 
             await db.SaveChangesAsync();
             return Ok();
