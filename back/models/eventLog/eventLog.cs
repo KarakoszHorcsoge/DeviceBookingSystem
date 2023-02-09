@@ -10,7 +10,7 @@ namespace back.models.EventLogs;
         /// event log id-ja
         /// </summary>
         /// <value>int autoincrement</value>
-        [ Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [ Required,Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         /// <summary>
@@ -49,13 +49,13 @@ namespace back.models.EventLogs;
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        public int TargetId { get; set; }
+        public Guid TargetId { get; set; }
 
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        public int? SecondTargetId { get; set; }
+        public Guid? SecondTargetId { get; set; }
 
         /// <summary>
         /// parancs típusa
@@ -75,17 +75,17 @@ namespace back.models.EventLogs;
         /// A szülő event id-ja
         /// </summary>
         /// <value>nullable int</value>
-        public Guid? ParentEventId { get; set; }
+        public Guid? ParentEventLogId { get; set; }
 
         [ForeignKey("ParentEventId")]
-        public virtual EventLog ParentEvent { get; set; }
+        public virtual EventLog ParentEventLog { get; set; }
 
         /// <summary>
         /// A szülő event id-ja
         /// </summary>
         /// <value>nullable int</value>
-        public Guid? ChildEventId { get; set; }
+        public Guid? ChildEventLogId { get; set; }
 
         [ForeignKey("ChildEventId")]
-        public virtual EventLog ChildEvent { get; set; }
+        public virtual EventLog ChildEventLog { get; set; }
     }

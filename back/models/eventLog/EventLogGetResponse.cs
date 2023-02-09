@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using back.models.Administrators;
 
 namespace back.models.EventLogs;
 
@@ -10,11 +11,15 @@ public class EventLogGetResponse {
         /// <value>int</value>
         public Guid CommandOriginId { get; set; }
 
+        public Administrator CommandOrigin { get; set; }
+
         /// <summary>
         /// parancs szülője 'közvetlen kiadója'
         /// </summary>
         /// <value>int</value>
         public Guid CommandParentId { get; set; }
+
+        public Administrator CommandParent { get; set; }
 
         /// <summary>
         /// lefutási idő
@@ -33,13 +38,18 @@ public class EventLogGetResponse {
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        public int TargetId { get; set; }
+        public Guid TargetId { get; set; }
+
+        public virtual Object Target { get; set;}
 
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        public int? SecondTargetId { get; set; }
+        public Guid? SecondTargetId { get; set; }
+
+        public virtual Object SecondTarget { get; set;}
+
 
         /// <summary>
         /// parancs típusa
@@ -51,12 +61,21 @@ public class EventLogGetResponse {
         /// Maga a lefuttatott sql parancs
         /// </summary>
         /// <value>1 string 1000</value>
-        [Required,MinLength(1),MaxLength(1000)]
         public string Command { get; set; }
 
         /// <summary>
         /// A szülő event id-ja
         /// </summary>
         /// <value>nullable int</value>
-        public int? ParentEventLogId { get; set; }
+        public Guid? ParentEventLogId { get; set; }
+    
+        public virtual EventLog ParentEventLog { get; set; }
+
+        /// <summary>
+        /// A szülő event id-ja
+        /// </summary>
+        /// <value>nullable int</value>
+        public Guid? ChildEventLogId { get; set; }
+
+        public virtual EventLog ChildEventLog { get; set; }
     }
