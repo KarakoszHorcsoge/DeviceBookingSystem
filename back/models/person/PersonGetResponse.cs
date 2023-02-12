@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using back.models.PersonGroups;
+using back.models.PersonTypes;
 
 namespace back.models.Persons;
 
@@ -66,10 +68,14 @@ public class PersonGetResponse : BaseResponse{
     /// <value>nullable int</value>
     public Guid? PersonGroupId { get; set; } = null;
 
+    public virtual PersonGroup PersonGroup { get; set; }
+
     /// <summary>
     /// személy típusa<br/>
     /// pl.: Előadó, Hallgató,VIP stb
     /// </summary>
     /// <value>int</value>
     public Guid PersonTypeId { get; set; }
+
+    public virtual PersonType PersonType { get; set; }
 }

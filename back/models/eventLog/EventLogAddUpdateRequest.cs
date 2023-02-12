@@ -38,14 +38,14 @@ public class EventLogAddUpdateRequest : BaseRequest{
         /// </summary>
         /// <value>int</value>
         [Required]
-        public int TargetId { get; set; }
+        public Guid TargetId { get; set; }
 
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
         [Required]
-        public int? SecondTargetId { get; set; }
+        public Guid? SecondTargetId { get; set; }
 
         /// <summary>
         /// parancs típusa
@@ -55,7 +55,7 @@ public class EventLogAddUpdateRequest : BaseRequest{
         public string CommandType { get; set; }
 
         /// <summary>
-        /// Maga a lefuttatott sql parancs
+        /// Maga a lefuttatott sql parancs paraméterei
         /// </summary>
         /// <value>1 string 1000</value>
         [Required,MinLength(1),MaxLength(1000)]
@@ -65,5 +65,6 @@ public class EventLogAddUpdateRequest : BaseRequest{
         /// A szülő event id-ja
         /// </summary>
         /// <value>nullable int</value>
-        public int? ParentEventLogId { get; set; }
+        public Guid? ParentEventLogId { get; set; }
+        public Guid? ChildEventLogId { get; set; }
     }

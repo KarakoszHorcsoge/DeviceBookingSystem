@@ -403,14 +403,14 @@ public class ApplicationDbContext : DbContext
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<EventLog>()
-            .HasOne(el => el.ParentEvent)
-            .WithOne(el => el.ChildEvent)
+            .HasOne(el => el.ParentEventLog)
+            .WithOne(el => el.ChildEventLog)
             .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<EventLog>()
-            .HasOne(el => el.ChildEvent)
-            .WithOne(el => el.ParentEvent)
+            .HasOne(el => el.ChildEventLog)
+            .WithOne(el => el.ParentEventLog)
             .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade);
         #endregion

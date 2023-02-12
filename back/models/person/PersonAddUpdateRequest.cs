@@ -74,4 +74,7 @@ public class PersonAddUpdateRequest : BaseRequest{
     /// </summary>
     /// <value>nullable int</value>
     public Guid? PersonGroupId { get; set; } = null;
+
+
+    public Guid PersonTypeId { get; set; }
 }

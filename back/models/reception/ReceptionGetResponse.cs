@@ -1,7 +1,9 @@
 
+using back.models.Administrators;
+
 namespace back.models.Receptions;
 
-public class ReceptionGetResponse{
+public class ReceptionGetResponse:BaseResponse{
     
     /// <summary>
     /// porta id-ja
@@ -25,5 +27,7 @@ public class ReceptionGetResponse{
     /// A portáért felelős rendszergazda
     /// </summary>
     /// <value>int</value>
-    public int AdminId { get; set; }
+    public Guid AdminId { get; set; }
+
+    public virtual Administrator Administrator { get; set; }
 }

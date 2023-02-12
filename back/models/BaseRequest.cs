@@ -6,4 +6,8 @@ public class BaseRequest{
     /// </summary>
     /// <value></value>
     public DateTime OriginalSendTime { get; set; }
+
+    public Guid CreatorId { get; set; }
+
+    public Guid ModifierId { get; set; }
 }

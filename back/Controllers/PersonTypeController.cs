@@ -1,6 +1,6 @@
 using back.DbContexts.ApplicationDbContext;
 using back.models;
-using back.models.Administrators;
+using back.models.PersonTypes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,9 +8,9 @@ namespace back.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AdministratorController : ControllerBase
+public class PersonTypeController : ControllerBase
 {
-    public AdministratorController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
+    public PersonTypeController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
     {
         this.db = db;
         _logger = logger;
@@ -21,29 +21,28 @@ public class AdministratorController : ControllerBase
     private readonly ILogger<WeatherForecastController> _logger;
 
     [HttpGet]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PersonTypeGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            var result = db.Administrators.AsNoTracking()
-            .Include(a => a.Authoroty)
-            .Select(a => new AdministratorGetResponse
+            var result = db.PersonTypes.AsNoTracking()
+            .Select(r => new PersonTypeGetResponse
             {
-                Id = (Guid)a.Id,
-                Name = a.Name,
-                Email = a.Email,
-                AuthorotyId = (Guid)a.AuthorotyId!,
-                Authoroty = a.Authoroty,
+                Id = (Guid)r.Id,
+                Name = r.Name,
+                IsBorrowable = r.IsBorrowable,
+                CardPrefix = r.CardPrefix,
+                Comment = r.Comment,
 
-                CreationTime = a.CreationTime,
-                CreatorId = a.CreatorId,
-                Creator = a.Creator,
-                ModificationTime = a.ModificationTime,
-                ModifierId = a.ModifierId,
-                Modifier = a.Modifier,
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                ModifierId = r.ModifierId,
+                Modifier = r.Modifier,
             });
             return Ok(await result.ToListAsync());
         }
@@ -59,7 +58,7 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PersonTypeGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
@@ -68,24 +67,23 @@ public class AdministratorController : ControllerBase
     {
         try
         {
-            var result = db.Administrators.AsNoTracking()
-               .Where(p => p.Id == id)
-               .Include(a => a.Authoroty)
-                .Select(a => new AdministratorGetResponse
-                {
-                    Id = (Guid)a.Id,
-                    Name = a.Name,
-                    Email = a.Email,
-                    AuthorotyId = (Guid)a.AuthorotyId!,
-                    Authoroty = a.Authoroty,
+            var result = db.PersonTypes.AsNoTracking()
+            .Where(p => p.Id == id)
+            .Select(r => new PersonTypeGetResponse
+            {
+                Id = (Guid)r.Id,
+                Name = r.Name,
+                IsBorrowable = r.IsBorrowable,
+                CardPrefix = r.CardPrefix,
+                Comment = r.Comment,
 
-                    CreationTime = a.CreationTime,
-                    CreatorId = a.CreatorId,
-                    Creator = a.Creator,
-                    ModificationTime = a.ModificationTime,
-                    ModifierId = a.ModifierId,
-                    Modifier = a.Modifier,
-                }).SingleOrDefaultAsync();
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                ModifierId = r.ModifierId,
+                Modifier = r.Modifier,
+            }).SingleOrDefaultAsync();
 
             if (result != null)
             {
@@ -113,11 +111,11 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PersonTypeGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Add([FromBody] AdministratorAddUpdateRequest request)
+    public async Task<IActionResult> Add([FromBody] PersonTypeAddUpdateRequest request)
     {
         try
         {
@@ -130,25 +128,25 @@ public class AdministratorController : ControllerBase
                            .Where(y => y.Count > 0)
                            .ToList().ToString()!,
                     ResponseCode = 400
-                });
+                }); ;
             }
-            var Administrator = new Administrator()
+            var PersonType = new PersonType()
             {
-
                 Name = request.Name,
-                Email = request.Email,
-                AuthorotyId = request.AuthorotyId,
+                IsBorrowable = request.IsBorrowable,
+                CardPrefix = request.CardPrefix,
+                Comment = request.Comment,
 
-                CreationTime = DateTime.Now,
-                CreatorId = request.CreatorId,
-                ModificationTime = DateTime.Now,
-                ModifierId = request.ModifierId,
+                ModifierId = null,
+                ModificationTime = request.OriginalSendTime,
+                CreatorId = null,
+                CreationTime = request.OriginalSendTime,
             };
 
-            db.Administrators.Add(Administrator);
+            db.PersonTypes.Add(PersonType);
             await db.SaveChangesAsync();
 
-            return await GetOne(Administrator.Id);
+            return await GetOne(PersonType.Id);
         }
         catch (Exception ex)
         {
@@ -169,7 +167,7 @@ public class AdministratorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] AdministratorAddUpdateRequest request)
+    public async Task<IActionResult> Update(Guid id, [FromBody] PersonTypeAddUpdateRequest request)
     {
         try
         {
@@ -185,25 +183,27 @@ public class AdministratorController : ControllerBase
                 }); ;
             }
 
-            var Administrator = await db.Administrators.SingleOrDefaultAsync(c => c.Id == id);
+            var PersonType = await db.PersonTypes.SingleOrDefaultAsync(c => c.Id == id);
 
-            if (Administrator == null)
+            if (PersonType == null)
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
                     IsSuccesfull = false
                 });
             }
-            Administrator.Name = request.Name;
-            Administrator.Email = request.Email;
-            Administrator.AuthorotyId = request.AuthorotyId;
 
-            //Administrator.UpdateUserId = this.currentUserIdFromToken;
-            Administrator.ModificationTime = request.OriginalSendTime;
+            PersonType.Name = request.Name;
+            PersonType.IsBorrowable = request.IsBorrowable;
+            PersonType.CardPrefix = request.CardPrefix;
+            PersonType.Comment = request.Comment;
+            
+            PersonType.ModifierId = null;
+            PersonType.ModificationTime = request.OriginalSendTime;
 
             await db.SaveChangesAsync();
-
-            return await GetOne(Administrator.Id);
+            
+            return await GetOne(PersonType.Id);
         }
         catch (Exception ex)
         {
@@ -225,9 +225,9 @@ public class AdministratorController : ControllerBase
     {
         try
         {
-            var AdministratorsToRemove = await db.Administrators.Where(ic => ids.Contains(ic.Id)).ToListAsync();
+            var PersonTypesToRemove = await db.PersonTypes.Where(ic => ids.Contains(ic.Id)).ToListAsync();
 
-            if (!AdministratorsToRemove.Any())
+            if (!PersonTypesToRemove.Any())
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
@@ -237,7 +237,7 @@ public class AdministratorController : ControllerBase
                 });
             }
 
-            db.Administrators.RemoveRange(AdministratorsToRemove);
+            db.PersonTypes.RemoveRange(PersonTypesToRemove);
 
             await db.SaveChangesAsync();
             return Ok();

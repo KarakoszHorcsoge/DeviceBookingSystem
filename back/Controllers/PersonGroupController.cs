@@ -1,6 +1,6 @@
 using back.DbContexts.ApplicationDbContext;
 using back.models;
-using back.models.Administrators;
+using back.models.PersonGroups;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,9 +8,9 @@ namespace back.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AdministratorController : ControllerBase
+public class PersonGroupController : ControllerBase
 {
-    public AdministratorController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
+    public PersonGroupController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
     {
         this.db = db;
         _logger = logger;
@@ -21,29 +21,26 @@ public class AdministratorController : ControllerBase
     private readonly ILogger<WeatherForecastController> _logger;
 
     [HttpGet]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PersonGroupGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            var result = db.Administrators.AsNoTracking()
-            .Include(a => a.Authoroty)
-            .Select(a => new AdministratorGetResponse
+            var result = db.PersonGroups.AsNoTracking()
+            .Select(r => new PersonGroupGetResponse
             {
-                Id = (Guid)a.Id,
-                Name = a.Name,
-                Email = a.Email,
-                AuthorotyId = (Guid)a.AuthorotyId!,
-                Authoroty = a.Authoroty,
+                Id = (Guid)r.Id,
+                Name = r.Name,
+                status = r.status,
+                comment = r.comment,
 
-                CreationTime = a.CreationTime,
-                CreatorId = a.CreatorId,
-                Creator = a.Creator,
-                ModificationTime = a.ModificationTime,
-                ModifierId = a.ModifierId,
-                Modifier = a.Modifier,
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                Modifier = r.Modifier
             });
             return Ok(await result.ToListAsync());
         }
@@ -59,7 +56,7 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PersonGroupGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
@@ -68,24 +65,21 @@ public class AdministratorController : ControllerBase
     {
         try
         {
-            var result = db.Administrators.AsNoTracking()
-               .Where(p => p.Id == id)
-               .Include(a => a.Authoroty)
-                .Select(a => new AdministratorGetResponse
-                {
-                    Id = (Guid)a.Id,
-                    Name = a.Name,
-                    Email = a.Email,
-                    AuthorotyId = (Guid)a.AuthorotyId!,
-                    Authoroty = a.Authoroty,
+            var result = db.PersonGroups.AsNoTracking()
+            .Where(p => p.Id == id)
+            .Select(r => new PersonGroupGetResponse
+            {
+                Id = (Guid)r.Id,
+                Name = r.Name,
+                status = r.status,
+                comment = r.comment,
 
-                    CreationTime = a.CreationTime,
-                    CreatorId = a.CreatorId,
-                    Creator = a.Creator,
-                    ModificationTime = a.ModificationTime,
-                    ModifierId = a.ModifierId,
-                    Modifier = a.Modifier,
-                }).SingleOrDefaultAsync();
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                Modifier = r.Modifier
+            }).SingleOrDefaultAsync();
 
             if (result != null)
             {
@@ -113,11 +107,11 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PersonGroupGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Add([FromBody] AdministratorAddUpdateRequest request)
+    public async Task<IActionResult> Add([FromBody] PersonGroupAddUpdateRequest request)
     {
         try
         {
@@ -130,25 +124,24 @@ public class AdministratorController : ControllerBase
                            .Where(y => y.Count > 0)
                            .ToList().ToString()!,
                     ResponseCode = 400
-                });
+                }); ;
             }
-            var Administrator = new Administrator()
+            var PersonGroup = new PersonGroup()
             {
-
                 Name = request.Name,
-                Email = request.Email,
-                AuthorotyId = request.AuthorotyId,
+                status = request.status,
+                comment = request.comment,
 
-                CreationTime = DateTime.Now,
-                CreatorId = request.CreatorId,
-                ModificationTime = DateTime.Now,
-                ModifierId = request.ModifierId,
+                ModifierId = null,
+                ModificationTime = request.OriginalSendTime,
+                CreatorId = null,
+                CreationTime = request.OriginalSendTime,
             };
 
-            db.Administrators.Add(Administrator);
+            db.PersonGroups.Add(PersonGroup);
             await db.SaveChangesAsync();
 
-            return await GetOne(Administrator.Id);
+            return await GetOne(PersonGroup.Id);
         }
         catch (Exception ex)
         {
@@ -169,7 +162,7 @@ public class AdministratorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] AdministratorAddUpdateRequest request)
+    public async Task<IActionResult> Update(Guid id, [FromBody] PersonGroupAddUpdateRequest request)
     {
         try
         {
@@ -185,25 +178,26 @@ public class AdministratorController : ControllerBase
                 }); ;
             }
 
-            var Administrator = await db.Administrators.SingleOrDefaultAsync(c => c.Id == id);
+            var PersonGroup = await db.PersonGroups.SingleOrDefaultAsync(c => c.Id == id);
 
-            if (Administrator == null)
+            if (PersonGroup == null)
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
                     IsSuccesfull = false
                 });
             }
-            Administrator.Name = request.Name;
-            Administrator.Email = request.Email;
-            Administrator.AuthorotyId = request.AuthorotyId;
 
-            //Administrator.UpdateUserId = this.currentUserIdFromToken;
-            Administrator.ModificationTime = request.OriginalSendTime;
+            PersonGroup.Name = request.Name;
+            PersonGroup.status = request.status;
+            PersonGroup.comment = request.comment;
+            
+            PersonGroup.ModifierId = null;
+            PersonGroup.ModificationTime = request.OriginalSendTime;
 
             await db.SaveChangesAsync();
-
-            return await GetOne(Administrator.Id);
+            
+            return await GetOne(PersonGroup.Id);
         }
         catch (Exception ex)
         {
@@ -225,9 +219,9 @@ public class AdministratorController : ControllerBase
     {
         try
         {
-            var AdministratorsToRemove = await db.Administrators.Where(ic => ids.Contains(ic.Id)).ToListAsync();
+            var PersonGroupsToRemove = await db.PersonGroups.Where(ic => ids.Contains(ic.Id)).ToListAsync();
 
-            if (!AdministratorsToRemove.Any())
+            if (!PersonGroupsToRemove.Any())
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
@@ -237,7 +231,7 @@ public class AdministratorController : ControllerBase
                 });
             }
 
-            db.Administrators.RemoveRange(AdministratorsToRemove);
+            db.PersonGroups.RemoveRange(PersonGroupsToRemove);
 
             await db.SaveChangesAsync();
             return Ok();

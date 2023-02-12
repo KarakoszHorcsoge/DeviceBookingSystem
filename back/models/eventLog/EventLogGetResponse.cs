@@ -40,16 +40,11 @@ public class EventLogGetResponse {
         /// <value>int</value>
         public Guid TargetId { get; set; }
 
-        public virtual Object Target { get; set;}
-
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
         public Guid? SecondTargetId { get; set; }
-
-        public virtual Object SecondTarget { get; set;}
-
 
         /// <summary>
         /// parancs típusa

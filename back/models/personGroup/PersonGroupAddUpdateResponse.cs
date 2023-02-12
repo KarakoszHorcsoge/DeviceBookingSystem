@@ -1,6 +1,6 @@
 namespace back.models.PersonGroups;
 
-public class PersonGroupAddUpdaeResponse
+public class PersonGroupAddUpdateResponse
 {
     PersonGroupGetResponse PersonGroup { get; set; }
 }

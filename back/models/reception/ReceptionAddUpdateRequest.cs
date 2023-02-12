@@ -3,7 +3,7 @@
 namespace back.models.Receptions;
 
 
-public class ReceptionAddUpdateRequest : BaseModel{
+public class ReceptionAddUpdateRequest : BaseRequest{
 
     /// <summary>
     /// porta id-ja
@@ -27,5 +27,5 @@ public class ReceptionAddUpdateRequest : BaseModel{
     /// A portáért felelős rendszergazda
     /// </summary>
     /// <value>int</value>
-    public int AdminId { get; set; }
+    public Guid AdminId { get; set; }
 }

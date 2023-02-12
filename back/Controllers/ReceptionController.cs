@@ -1,6 +1,6 @@
 using back.DbContexts.ApplicationDbContext;
 using back.models;
-using back.models.Administrators;
+using back.models.Receptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,9 +8,9 @@ namespace back.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AdministratorController : ControllerBase
+public class ReceptionController : ControllerBase
 {
-    public AdministratorController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
+    public ReceptionController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
     {
         this.db = db;
         _logger = logger;
@@ -21,29 +21,28 @@ public class AdministratorController : ControllerBase
     private readonly ILogger<WeatherForecastController> _logger;
 
     [HttpGet]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ReceptionGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            var result = db.Administrators.AsNoTracking()
-            .Include(a => a.Authoroty)
-            .Select(a => new AdministratorGetResponse
+            var result = db.Receptions.AsNoTracking()
+            .Select(r => new ReceptionGetResponse
             {
-                Id = (Guid)a.Id,
-                Name = a.Name,
-                Email = a.Email,
-                AuthorotyId = (Guid)a.AuthorotyId!,
-                Authoroty = a.Authoroty,
+                Id = (Guid)r.Id,
+                Name = r.Name,
+                Address = r.Address,
+                Comment = r.Comment,
+                AdminId = (Guid)r.AdminId!,
 
-                CreationTime = a.CreationTime,
-                CreatorId = a.CreatorId,
-                Creator = a.Creator,
-                ModificationTime = a.ModificationTime,
-                ModifierId = a.ModifierId,
-                Modifier = a.Modifier,
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                ModifierId = r.ModifierId,
+                Modifier = r.Modifier,
             });
             return Ok(await result.ToListAsync());
         }
@@ -59,7 +58,7 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ReceptionGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
@@ -68,24 +67,23 @@ public class AdministratorController : ControllerBase
     {
         try
         {
-            var result = db.Administrators.AsNoTracking()
-               .Where(p => p.Id == id)
-               .Include(a => a.Authoroty)
-                .Select(a => new AdministratorGetResponse
-                {
-                    Id = (Guid)a.Id,
-                    Name = a.Name,
-                    Email = a.Email,
-                    AuthorotyId = (Guid)a.AuthorotyId!,
-                    Authoroty = a.Authoroty,
+            var result = db.Receptions.AsNoTracking()
+            .Where(p => p.Id == id)
+            .Select(r => new ReceptionGetResponse
+            {
+                Id = (Guid)r.Id,
+                Name = r.Name,
+                Address = r.Address,
+                Comment = r.Comment,
+                AdminId = (Guid)r.AdminId!,
 
-                    CreationTime = a.CreationTime,
-                    CreatorId = a.CreatorId,
-                    Creator = a.Creator,
-                    ModificationTime = a.ModificationTime,
-                    ModifierId = a.ModifierId,
-                    Modifier = a.Modifier,
-                }).SingleOrDefaultAsync();
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                Creator = r.Creator,
+                ModificationTime = r.ModificationTime,
+                ModifierId = r.ModifierId,
+                Modifier = r.Modifier,
+            }).SingleOrDefaultAsync();
 
             if (result != null)
             {
@@ -113,11 +111,11 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(AdministratorGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ReceptionGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Add([FromBody] AdministratorAddUpdateRequest request)
+    public async Task<IActionResult> Add([FromBody] ReceptionAddUpdateRequest request)
     {
         try
         {
@@ -130,25 +128,25 @@ public class AdministratorController : ControllerBase
                            .Where(y => y.Count > 0)
                            .ToList().ToString()!,
                     ResponseCode = 400
-                });
+                }); ;
             }
-            var Administrator = new Administrator()
+            var Reception = new Reception()
             {
-
                 Name = request.Name,
-                Email = request.Email,
-                AuthorotyId = request.AuthorotyId,
+                Address = request.Address,
+                Comment = request.Comment,
+                AdminId = request.AdminId!,
 
-                CreationTime = DateTime.Now,
-                CreatorId = request.CreatorId,
-                ModificationTime = DateTime.Now,
-                ModifierId = request.ModifierId,
+                ModifierId = null,
+                ModificationTime = request.OriginalSendTime,
+                CreatorId = null,
+                CreationTime = request.OriginalSendTime,
             };
 
-            db.Administrators.Add(Administrator);
+            db.Receptions.Add(Reception);
             await db.SaveChangesAsync();
 
-            return await GetOne(Administrator.Id);
+            return await GetOne(Reception.Id);
         }
         catch (Exception ex)
         {
@@ -169,7 +167,7 @@ public class AdministratorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] AdministratorAddUpdateRequest request)
+    public async Task<IActionResult> Update(Guid id, [FromBody] ReceptionAddUpdateRequest request)
     {
         try
         {
@@ -185,25 +183,27 @@ public class AdministratorController : ControllerBase
                 }); ;
             }
 
-            var Administrator = await db.Administrators.SingleOrDefaultAsync(c => c.Id == id);
+            var Reception = await db.Receptions.SingleOrDefaultAsync(c => c.Id == id);
 
-            if (Administrator == null)
+            if (Reception == null)
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
                     IsSuccesfull = false
                 });
             }
-            Administrator.Name = request.Name;
-            Administrator.Email = request.Email;
-            Administrator.AuthorotyId = request.AuthorotyId;
 
-            //Administrator.UpdateUserId = this.currentUserIdFromToken;
-            Administrator.ModificationTime = request.OriginalSendTime;
+            Reception.Name = request.Name;
+            Reception.Address = request.Address;
+            Reception.Comment = request.Comment;
+            Reception.AdminId = request.AdminId;
+            
+            Reception.ModifierId = null;
+            Reception.ModificationTime = request.OriginalSendTime;
 
             await db.SaveChangesAsync();
-
-            return await GetOne(Administrator.Id);
+            
+            return await GetOne(Reception.Id);
         }
         catch (Exception ex)
         {
@@ -225,9 +225,9 @@ public class AdministratorController : ControllerBase
     {
         try
         {
-            var AdministratorsToRemove = await db.Administrators.Where(ic => ids.Contains(ic.Id)).ToListAsync();
+            var ReceptionsToRemove = await db.Receptions.Where(ic => ids.Contains(ic.Id)).ToListAsync();
 
-            if (!AdministratorsToRemove.Any())
+            if (!ReceptionsToRemove.Any())
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
@@ -237,7 +237,7 @@ public class AdministratorController : ControllerBase
                 });
             }
 
-            db.Administrators.RemoveRange(AdministratorsToRemove);
+            db.Receptions.RemoveRange(ReceptionsToRemove);
 
             await db.SaveChangesAsync();
             return Ok();

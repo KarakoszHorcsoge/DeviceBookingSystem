@@ -3,7 +3,7 @@ using back.enums.status;
 
 namespace back.models.PersonGroups;
 
-public class PersonGroupAddUpdaeRequest : BaseRequest{
+public class PersonGroupAddUpdateRequest : BaseRequest{
 
     /// <summary>
     /// Személy csoport neve 
