@@ -1,64 +1,71 @@
 using System.ComponentModel.DataAnnotations;
+using back.enums.eventTypes;
+using back.enums.TargetTypes;
 
 namespace back.models.EventLogs;
 
-public class EventLogAddUpdateRequest : BaseRequest{
+public class EventLogAddUpdateRequest{
 
         /// <summary>
         /// parancs létrehozoója, az eredeti
         /// </summary>
         /// <value>int</value>
-        [Required]
-        public Guid CommandOriginId { get; set; }
+        //[Required]
+        public Guid? CommandOriginId { get; set; }
 
         /// <summary>
         /// parancs szülője 'közvetlen kiadója'
         /// </summary>
         /// <value>int</value>
-        [Required]
-        public Guid CommandParentId { get; set; }
+        //[Required]
+        public Guid? CommandParentId { get; set; }
 
         /// <summary>
         /// lefutási idő
         /// </summary>
         /// <value>Datetime</value>
-        [Required]
+        //[Required]
         public DateTime ExecutionTime { get; set; }
 
         /// <summary>
         /// Célpont típusa<br/>
         /// pl.: admin,person,personGroup stb
         /// </summary>
-        /// <value>string</value>
-        [Required,MinLength(1),MaxLength(20)]
-        public string TargetType { get; set; }
+        /// <value>enum</value>
+        //[Required]
+        public TargetType TargetType { get; set; }
 
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        [Required]
-        public Guid TargetId { get; set; }
+        //[Required]
+        public Guid? TargetId { get; set; }
+
+        /// <summary>
+        /// Célpont típusa<br/>
+        /// pl.: admin,person,personGroup stb
+        /// </summary>
+        /// <value>enum</value>
+        public TargetType? SecondTargetType { get; set; }
 
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        [Required]
         public Guid? SecondTargetId { get; set; }
 
         /// <summary>
         /// parancs típusa
         /// </summary>
-        /// <value>1 string 50</value>
-        [Required,MinLength(1),MaxLength(50)]
-        public string CommandType { get; set; }
+        //[Required]
+        public eventType CommandType { get; set; }
 
         /// <summary>
         /// Maga a lefuttatott sql parancs paraméterei
         /// </summary>
         /// <value>1 string 1000</value>
-        [Required,MinLength(1),MaxLength(1000)]
+        //[Required,MinLength(1),MaxLength(1000)]
         public string Command { get; set; }
 
         /// <summary>

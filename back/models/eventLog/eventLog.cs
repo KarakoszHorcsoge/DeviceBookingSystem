@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using back.enums.eventTypes;
+using back.enums.TargetTypes;
 using back.models.Administrators;
 
 namespace back.models.EventLogs;
@@ -10,14 +12,14 @@ namespace back.models.EventLogs;
         /// event log id-ja
         /// </summary>
         /// <value>int autoincrement</value>
-        [ Required,Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [ Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         /// <summary>
         /// parancs létrehozoója, az eredeti
         /// </summary>
         /// <value>int</value>
-        public Guid CommandOriginId { get; set; }
+        public Guid? CommandOriginId { get; set; }
 
         [ForeignKey("CommandOriginId")]
         public virtual Administrator CommandOrigin { get; set; }
@@ -41,15 +43,20 @@ namespace back.models.EventLogs;
         /// Célpont típusa<br/>
         /// pl.: admin,person,personGroup stb
         /// </summary>
-        /// <value>string</value>
-        [ MinLength(1),MaxLength(20)]
-        public string TargetType { get; set; }
+        public TargetType TargetType { get; set; }
 
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        public Guid TargetId { get; set; }
+        public Guid? TargetId { get; set; }
+
+        /// <summary>
+        /// Célpont típusa<br/>
+        /// pl.: admin,person,personGroup stb
+        /// </summary>
+        /// <value>enum</value>
+        public TargetType? SecondTargetType { get; set; }
 
         /// <summary>
         /// Target id-ja
@@ -60,9 +67,7 @@ namespace back.models.EventLogs;
         /// <summary>
         /// parancs típusa
         /// </summary>
-        /// <value>1 string 50</value>
-        [ MinLength(1),MaxLength(50)]
-        public string CommandType { get; set; }
+        public eventType CommandType { get; set; }
 
         /// <summary>
         /// Maga a lefuttatott sql parancs
@@ -75,17 +80,19 @@ namespace back.models.EventLogs;
         /// A szülő event id-ja
         /// </summary>
         /// <value>nullable int</value>
+        // szarul generálja a migration filet
         public Guid? ParentEventLogId { get; set; }
 
-        [ForeignKey("ParentEventId")]
+        [ForeignKey("ParentEventLogId")]
         public virtual EventLog ParentEventLog { get; set; }
 
         /// <summary>
         /// A szülő event id-ja
         /// </summary>
         /// <value>nullable int</value>
+        // szarul generálja a migration filet
         public Guid? ChildEventLogId { get; set; }
 
-        [ForeignKey("ChildEventId")]
+        [ForeignKey("ChildEventLogId")]
         public virtual EventLog ChildEventLog { get; set; }
     }

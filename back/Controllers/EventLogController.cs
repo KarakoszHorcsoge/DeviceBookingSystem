@@ -8,9 +8,9 @@ namespace back.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class EventLogControllr : ControllerBase
+public class EventLogController : ControllerBase
 {
-    public EventLogControllr(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
+    public EventLogController(ApplicationDbContext db, ILogger<WeatherForecastController> logger)
     {
         this.db = db;
         _logger = logger;

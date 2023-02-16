@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using back.enums.eventTypes;
+using back.enums.TargetTypes;
 using back.models.Administrators;
 
 namespace back.models.EventLogs;
@@ -9,7 +11,7 @@ public class EventLogGetResponse {
         /// parancs létrehozoója, az eredeti
         /// </summary>
         /// <value>int</value>
-        public Guid CommandOriginId { get; set; }
+        public Guid? CommandOriginId { get; set; }
 
         public Administrator CommandOrigin { get; set; }
 
@@ -17,7 +19,7 @@ public class EventLogGetResponse {
         /// parancs szülője 'közvetlen kiadója'
         /// </summary>
         /// <value>int</value>
-        public Guid CommandParentId { get; set; }
+        public Guid? CommandParentId { get; set; }
 
         public Administrator CommandParent { get; set; }
 
@@ -31,14 +33,21 @@ public class EventLogGetResponse {
         /// Célpont típusa<br/>
         /// pl.: admin,person,personGroup stb
         /// </summary>
-        /// <value>string</value>
-        public string TargetType { get; set; }
+        /// <value>enum</value>
+        public TargetType TargetType { get; set; }
 
         /// <summary>
         /// Target id-ja
         /// </summary>
         /// <value>int</value>
-        public Guid TargetId { get; set; }
+        public Guid? TargetId { get; set; }
+
+        /// <summary>
+        /// Célpont típusa<br/>
+        /// pl.: admin,person,personGroup stb
+        /// </summary>
+        /// <value>enum</value>
+        public TargetType? SecondTargetType { get; set; }
 
         /// <summary>
         /// Target id-ja
@@ -49,8 +58,7 @@ public class EventLogGetResponse {
         /// <summary>
         /// parancs típusa
         /// </summary>
-        /// <value>1 string 50</value>
-        public string CommandType { get; set; }
+        public eventType CommandType { get; set; }
 
         /// <summary>
         /// Maga a lefuttatott sql parancs

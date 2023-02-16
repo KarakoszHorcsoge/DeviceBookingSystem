@@ -148,19 +148,18 @@ namespace back.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    CommandOriginId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    CommandOriginId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CommandParentId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     ExecutionTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    TargetType = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TargetId = table.Column<int>(type: "int", nullable: false),
-                    SecondTargetId = table.Column<int>(type: "int", nullable: true),
-                    CommandType = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TargetType = table.Column<int>(type: "int", nullable: false),
+                    TargetId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    SecondTargetType = table.Column<int>(type: "int", nullable: true),
+                    SecondTargetId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    CommandType = table.Column<int>(type: "int", nullable: false),
                     Command = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ParentEventId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    ChildEventId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                    ParentEventLogId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    ChildEventLogId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -178,8 +177,8 @@ namespace back.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_EventLog_EventLog_ParentEventId",
-                        column: x => x.ParentEventId,
+                        name: "FK_EventLog_EventLog_ParentEventLogId",
+                        column: x => x.ParentEventLogId,
                         principalTable: "EventLog",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -676,9 +675,9 @@ namespace back.Migrations
                 column: "CommandParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EventLog_ParentEventId",
+                name: "IX_EventLog_ParentEventLogId",
                 table: "EventLog",
-                column: "ParentEventId",
+                column: "ParentEventLogId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

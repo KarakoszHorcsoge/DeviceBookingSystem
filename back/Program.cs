@@ -16,7 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(dbContextOptions =>
                     .LogTo(Console.WriteLine, LogLevel.Information)
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors();
-});
+},ServiceLifetime.Transient);
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

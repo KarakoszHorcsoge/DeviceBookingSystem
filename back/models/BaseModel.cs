@@ -15,10 +15,10 @@ public class BaseModel{
     public Guid? CreatorId { get; set; }
 
     [ForeignKey("CreatorId")]
-    public Administrator Creator { get; set; }
+    public virtual Administrator Creator { get; set; }
 
     public Guid? ModifierId { get; set; }
 
     [ForeignKey("ModifierId")]
-    public Administrator Modifier { get; set; }
+    public virtual Administrator Modifier { get; set; }
 }

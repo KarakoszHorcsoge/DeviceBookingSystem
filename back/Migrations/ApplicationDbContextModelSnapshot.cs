@@ -21,7 +21,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.Administrators.Administrator", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -63,7 +63,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.Authorotys.Authoroty", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -101,7 +101,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.BorrowRestrictions.BorrowRestriction", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -152,7 +152,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.Cards.Card", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -200,7 +200,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.DelayedEvents.DelayedEvent", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -244,7 +244,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.DeviceTypes.DeviceType", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -276,7 +276,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.Devices.Device", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -333,7 +333,7 @@ namespace back.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("ChildEventId")
+                    b.Property<Guid?>("ChildEventLogId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Command")
@@ -341,33 +341,32 @@ namespace back.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
-                    b.Property<Guid>("CommandOriginId")
+                    b.Property<Guid?>("CommandOriginId")
                         .HasColumnType("char(36)");
 
                     b.Property<Guid?>("CommandParentId")
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("CommandType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                    b.Property<int>("CommandType")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ExecutionTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid?>("ParentEventId")
+                    b.Property<Guid?>("ParentEventLogId")
                         .HasColumnType("char(36)");
 
-                    b.Property<int?>("SecondTargetId")
+                    b.Property<Guid?>("SecondTargetId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int?>("SecondTargetType")
                         .HasColumnType("int");
 
-                    b.Property<int>("TargetId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("TargetId")
+                        .HasColumnType("char(36)");
 
-                    b.Property<string>("TargetType")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                    b.Property<int>("TargetType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -375,7 +374,7 @@ namespace back.Migrations
 
                     b.HasIndex("CommandParentId");
 
-                    b.HasIndex("ParentEventId")
+                    b.HasIndex("ParentEventLogId")
                         .IsUnique();
 
                     b.ToTable("EventLog");
@@ -383,7 +382,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.PersonGroups.PersonGroup", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -423,7 +422,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.PersonTypes.PersonType", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -468,7 +467,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.Persons.Person", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -546,7 +545,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.Preferences.Preference", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -588,7 +587,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.Receptions.Reception", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -827,12 +826,12 @@ namespace back.Migrations
                         .HasForeignKey("CommandParentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("back.models.EventLogs.EventLog", "ChildEvent")
-                        .WithOne("ParentEvent")
-                        .HasForeignKey("back.models.EventLogs.EventLog", "ParentEventId")
+                    b.HasOne("back.models.EventLogs.EventLog", "ChildEventLog")
+                        .WithOne("ParentEventLog")
+                        .HasForeignKey("back.models.EventLogs.EventLog", "ParentEventLogId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("ChildEvent");
+                    b.Navigation("ChildEventLog");
 
                     b.Navigation("CommandOrigin");
 
@@ -1032,7 +1031,7 @@ namespace back.Migrations
 
             modelBuilder.Entity("back.models.EventLogs.EventLog", b =>
                 {
-                    b.Navigation("ParentEvent")
+                    b.Navigation("ParentEventLog")
                         .IsRequired();
                 });
 

@@ -1,8 +1,12 @@
 using back.DbContexts.ApplicationDbContext;
+using back.enums.eventTypes;
+using back.enums.TargetTypes;
 using back.models;
 using back.models.Administrators;
+using back.models.EventLogs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace back.Controllers;
 
@@ -14,8 +18,10 @@ public class AdministratorController : ControllerBase
     {
         this.db = db;
         _logger = logger;
-
+        this.dblog = new EventLogController(db,_logger);
     }
+
+    private EventLogController dblog;
 
     private ApplicationDbContext db;
     private readonly ILogger<WeatherForecastController> _logger;
@@ -45,6 +51,7 @@ public class AdministratorController : ControllerBase
                 ModifierId = a.ModifierId,
                 Modifier = a.Modifier,
             });
+           
             return Ok(await result.ToListAsync());
         }
         catch (System.Exception ex)
@@ -52,7 +59,7 @@ public class AdministratorController : ControllerBase
             return StatusCode(500, new BaseRequestResponse()
             {
                 IsSuccesfull = false,
-                MSG = ex.Message,
+               MSG = ex.Message,
                 ResponseCode = 500
             });
         }
@@ -97,7 +104,7 @@ public class AdministratorController : ControllerBase
                 {
                     IsSuccesfull = false,
                     MSG = "There is none",
-                    ResponseCode = 404
+                    ResponseCode = 404,
                 });
             }
         }
@@ -106,7 +113,7 @@ public class AdministratorController : ControllerBase
             return StatusCode(500, new BaseRequestResponse()
             {
                 IsSuccesfull = false,
-                MSG = ex.Message,
+               MSG = ex.Message,
                 ResponseCode = 500
             });
         }
@@ -140,14 +147,25 @@ public class AdministratorController : ControllerBase
                 AuthorotyId = request.AuthorotyId,
 
                 CreationTime = DateTime.Now,
-                CreatorId = request.CreatorId,
+                CreatorId = null,
                 ModificationTime = DateTime.Now,
-                ModifierId = request.ModifierId,
+                ModifierId = null,
             };
-
+            var varibale = new EventLog{
+                CommandOriginId = null,
+                CommandParentId = null,
+                ExecutionTime = Administrator.CreationTime,
+                TargetType = TargetType.Administrator,
+                TargetId = Administrator.Id,
+                SecondTargetType = null,
+                SecondTargetId = null,
+                CommandType = eventType.Add,
+                Command = $"ExecutionTime: {Administrator.CreationTime}Target Type:{TargetType.Administrator}",
+            };
+            
             db.Administrators.Add(Administrator);
+            db.EventLogs.Add(varibale);
             await db.SaveChangesAsync();
-
             return await GetOne(Administrator.Id);
         }
         catch (Exception ex)
@@ -155,7 +173,7 @@ public class AdministratorController : ControllerBase
             return StatusCode(500, new BaseRequestResponse()
             {
                 IsSuccesfull = false,
-                MSG = ex.Message
+               MSG = ex.Message,
             });
         }
     }
@@ -185,8 +203,8 @@ public class AdministratorController : ControllerBase
                 }); ;
             }
 
-            var Administrator = await db.Administrators.SingleOrDefaultAsync(c => c.Id == id);
-
+            var Administrator = db.Administrators.SingleOrDefault(c => c.Id == id);
+            var Original = JsonSerializer.Serialize(Administrator);
             if (Administrator == null)
             {
                 return StatusCode(404, new BaseRequestResponse()
@@ -198,11 +216,24 @@ public class AdministratorController : ControllerBase
             Administrator.Email = request.Email;
             Administrator.AuthorotyId = request.AuthorotyId;
 
-            //Administrator.UpdateUserId = this.currentUserIdFromToken;
-            Administrator.ModificationTime = request.OriginalSendTime;
+            Administrator.ModifierId = null;
+            Administrator.ModificationTime = DateTime.Now;
 
-            await db.SaveChangesAsync();
 
+            var log = db.EventLogs.Add(new EventLog{
+                CommandOriginId = null,
+                CommandParentId = null,
+                ExecutionTime = Administrator.ModificationTime,
+                TargetType = TargetType.Administrator,
+                TargetId = Administrator.Id,
+                SecondTargetType = null,
+                SecondTargetId = null,
+                CommandType = eventType.Update,
+                Command = "From: "+Original+" To: "+JsonSerializer.Serialize(Administrator),
+                ParentEventLogId = null,
+                ChildEventLogId = null,
+            });
+            db.SaveChanges();
             return await GetOne(Administrator.Id);
         }
         catch (Exception ex)
@@ -210,24 +241,24 @@ public class AdministratorController : ControllerBase
             return StatusCode(500, new BaseRequestResponse()
             {
                 IsSuccesfull = false,
-                MSG = ex.Message,
+               MSG = ex.Message,
                 ResponseCode = 500
             });
         }
     }
 
-    [HttpDelete("{ids}")]
+    [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Delete(Guid[] ids)
+    public async Task<IActionResult> Delete(Guid id)
     {
         try
         {
-            var AdministratorsToRemove = await db.Administrators.Where(ic => ids.Contains(ic.Id)).ToListAsync();
+            var AdministratorsToRemove = db.Administrators.Where(ic => id == ic.Id).SingleOrDefault();
 
-            if (!AdministratorsToRemove.Any())
+            if (AdministratorsToRemove == null)
             {
                 return StatusCode(404, new BaseRequestResponse()
                 {
@@ -237,8 +268,20 @@ public class AdministratorController : ControllerBase
                 });
             }
 
-            db.Administrators.RemoveRange(AdministratorsToRemove);
-
+            db.Administrators.Remove(AdministratorsToRemove);
+            var log = db.EventLogs.Add(new EventLog{
+                CommandOriginId = null,
+                CommandParentId = null,
+                ExecutionTime = DateTime.Now,
+                TargetType = TargetType.Administrator,
+                TargetId = id,
+                SecondTargetType = null,
+                SecondTargetId = null,
+                CommandType = eventType.Delete,
+                Command = "Removed",
+                ParentEventLogId = null,
+                ChildEventLogId = null,
+            });
             await db.SaveChangesAsync();
             return Ok();
         }
@@ -247,7 +290,7 @@ public class AdministratorController : ControllerBase
             return StatusCode(500, new BaseRequestResponse()
             {
                 IsSuccesfull = false,
-                MSG = ex.Message,
+               MSG = ex.Message,
                 ResponseCode = 500
             });
         }
