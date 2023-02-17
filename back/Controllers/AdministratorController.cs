@@ -7,6 +7,7 @@ using back.models.EventLogs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using back.common.loghelper;
 
 namespace back.Controllers;
 
@@ -141,7 +142,6 @@ public class AdministratorController : ControllerBase
             }
             var Administrator = new Administrator()
             {
-
                 Name = request.Name,
                 Email = request.Email,
                 AuthorotyId = request.AuthorotyId,
@@ -151,6 +151,9 @@ public class AdministratorController : ControllerBase
                 ModificationTime = DateTime.Now,
                 ModifierId = null,
             };
+            db.Administrators.Add(Administrator);
+            await db.SaveChangesAsync();
+            
             var varibale = new EventLog{
                 CommandOriginId = null,
                 CommandParentId = null,
@@ -160,12 +163,11 @@ public class AdministratorController : ControllerBase
                 SecondTargetType = null,
                 SecondTargetId = null,
                 CommandType = eventType.Add,
-                Command = $"ExecutionTime: {Administrator.CreationTime}Target Type:{TargetType.Administrator}",
+                Command = "Add: "+ common.loghelper.Comparer.partStringBuilder(Administrator),
             };
-            
-            db.Administrators.Add(Administrator);
             db.EventLogs.Add(varibale);
             await db.SaveChangesAsync();
+            
             return await GetOne(Administrator.Id);
         }
         catch (Exception ex)
