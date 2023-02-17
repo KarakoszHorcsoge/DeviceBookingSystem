@@ -8,9 +8,9 @@ import { HttpClient } from '@angular/common/http';
 export class appleSevice {
   constructor(private http: HttpClient) { }
 
-  url = 'http://localhost:8080';
+  url = 'http://localhost:5000';
 
 getConfig() {
-  return this.http.get<JSON>(this.url );
+  return this.http.get<JSON>(this.url+'/Administrator');
 }
 }

@@ -4,10 +4,14 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var  AllowedOrigins = "FrontEnd";
 
 builder.Services.AddControllers();
-
-builder.Services.AddCors();
+builder.Services.AddCors(options => {
+    options.AddPolicy(name: "FrontEnd",policy =>{
+        policy.WithOrigins("http://localhost:4200");
+    });
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(dbContextOptions =>
@@ -31,6 +35,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors(AllowedOrigins);
 
 app.UseHttpsRedirection();
 
