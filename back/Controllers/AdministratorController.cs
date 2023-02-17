@@ -154,7 +154,7 @@ public class AdministratorController : ControllerBase
             db.Administrators.Add(Administrator);
             await db.SaveChangesAsync();
             
-            var varibale = new EventLog{
+            var log = new EventLog{
                 CommandOriginId = null,
                 CommandParentId = null,
                 ExecutionTime = Administrator.CreationTime,
@@ -165,8 +165,8 @@ public class AdministratorController : ControllerBase
                 CommandType = eventType.Add,
                 Command = "Add: "+ common.loghelper.Comparer.partStringBuilder(Administrator),
             };
-            db.EventLogs.Add(varibale);
-            await db.SaveChangesAsync();
+            db.EventLogs.Add(log);
+            db.SaveChangesAsync();
             
             return await GetOne(Administrator.Id);
         }
@@ -206,7 +206,6 @@ public class AdministratorController : ControllerBase
             }
 
             var Administrator = db.Administrators.SingleOrDefault(c => c.Id == id);
-            var Original = JsonSerializer.Serialize(Administrator);
             if (Administrator == null)
             {
                 return StatusCode(404, new BaseRequestResponse()
@@ -214,6 +213,8 @@ public class AdministratorController : ControllerBase
                     IsSuccesfull = false
                 });
             }
+            var Original = Administrator;
+
             Administrator.Name = request.Name;
             Administrator.Email = request.Email;
             Administrator.AuthorotyId = request.AuthorotyId;
@@ -222,18 +223,14 @@ public class AdministratorController : ControllerBase
             Administrator.ModificationTime = DateTime.Now;
 
 
-            var log = db.EventLogs.Add(new EventLog{
-                CommandOriginId = null,
-                CommandParentId = null,
+            db.EventLogs.Add(new EventLog{
+                CommandOriginId = Administrator.ModifierId,
+                CommandParentId = Administrator.ModifierId,
                 ExecutionTime = Administrator.ModificationTime,
                 TargetType = TargetType.Administrator,
                 TargetId = Administrator.Id,
-                SecondTargetType = null,
-                SecondTargetId = null,
                 CommandType = eventType.Update,
-                Command = "From: "+Original+" To: "+JsonSerializer.Serialize(Administrator),
-                ParentEventLogId = null,
-                ChildEventLogId = null,
+                Command = common.loghelper.Comparer.getDiff(Original,Administrator),
             });
             db.SaveChanges();
             return await GetOne(Administrator.Id);
@@ -269,20 +266,15 @@ public class AdministratorController : ControllerBase
                     ResponseCode = 404
                 });
             }
-
             db.Administrators.Remove(AdministratorsToRemove);
-            var log = db.EventLogs.Add(new EventLog{
+            db.EventLogs.Add(new EventLog{
                 CommandOriginId = null,
                 CommandParentId = null,
                 ExecutionTime = DateTime.Now,
                 TargetType = TargetType.Administrator,
                 TargetId = id,
-                SecondTargetType = null,
-                SecondTargetId = null,
                 CommandType = eventType.Delete,
                 Command = "Removed",
-                ParentEventLogId = null,
-                ChildEventLogId = null,
             });
             await db.SaveChangesAsync();
             return Ok();
