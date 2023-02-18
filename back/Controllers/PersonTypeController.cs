@@ -138,9 +138,9 @@ public class PersonTypeController : ControllerBase
                 Comment = request.Comment,
 
                 ModifierId = null,
-                ModificationTime = request.OriginalSendTime,
+                ModificationTime = DateTime.Now,
                 CreatorId = null,
-                CreationTime = request.OriginalSendTime,
+                CreationTime = DateTime.Now,
             };
 
             db.PersonTypes.Add(PersonType);
@@ -199,7 +199,7 @@ public class PersonTypeController : ControllerBase
             PersonType.Comment = request.Comment;
             
             PersonType.ModifierId = null;
-            PersonType.ModificationTime = request.OriginalSendTime;
+            PersonType.ModificationTime = DateTime.Now;
 
             await db.SaveChangesAsync();
             

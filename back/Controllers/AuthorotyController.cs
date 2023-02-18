@@ -134,9 +134,9 @@ public class AuthorotyController : ControllerBase
                 AuthorotyLevel = request.AuthorotyLevel,
 
                 ModifierId = null,
-                ModificationTime = request.OriginalSendTime,
+                ModificationTime = DateTime.Now,
                 CreatorId = null,
-                CreationTime = request.OriginalSendTime,
+                CreationTime = DateTime.Now,
             };
 
             db.Authorotys.Add(Authoroty);
@@ -193,7 +193,7 @@ public class AuthorotyController : ControllerBase
             Authoroty.AuthorotyLevel = request.AuthorotyLevel;
 
             Authoroty.ModifierId = null;
-            Authoroty.ModificationTime = request.OriginalSendTime;
+            Authoroty.ModificationTime = DateTime.Now;
 
             await db.SaveChangesAsync();
             

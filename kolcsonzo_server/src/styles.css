@@ -26,3 +26,6 @@ body {
 ::-webkit-scrollbar-thumb{
     background-color: #22355e;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

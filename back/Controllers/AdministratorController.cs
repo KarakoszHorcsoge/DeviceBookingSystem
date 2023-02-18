@@ -183,7 +183,7 @@ public class AdministratorController : ControllerBase
 
 
     [HttpPut("{id}")]
-    [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(BaseRequestResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -233,7 +233,7 @@ public class AdministratorController : ControllerBase
                 Command = common.loghelper.Comparer.getDiff(Original,Administrator),
             });
             db.SaveChanges();
-            return await GetOne(Administrator.Id);
+            return Ok();
         }
         catch (Exception ex)
         {

@@ -157,9 +157,9 @@ public class BorrowRestrictionController : ControllerBase
                 DeviceTypeId = request.DeviceTypeId,
 
                 ModifierId = null,
-                ModificationTime = request.OriginalSendTime,
+                ModificationTime = DateTime.Now,
                 CreatorId = null,
-                CreationTime = request.OriginalSendTime,
+                CreationTime = DateTime.Now,
             };
 
             db.BorrowRestrictions.Add(BorrowRestriction);
@@ -219,7 +219,7 @@ public class BorrowRestrictionController : ControllerBase
             BorrowRestriction.DeviceTypeId = request.DeviceTypeId;
             
             BorrowRestriction.ModifierId = null;
-            BorrowRestriction.ModificationTime = request.OriginalSendTime;
+            BorrowRestriction.ModificationTime = DateTime.Now;
 
             await db.SaveChangesAsync();
             

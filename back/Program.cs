@@ -9,8 +9,21 @@ var  AllowedOrigins = "FrontEnd";
 builder.Services.AddControllers();
 builder.Services.AddCors(options => {
     options.AddPolicy(name: "FrontEnd",policy =>{
-        policy.WithOrigins("http://localhost:4200");
+        policy.WithOrigins("http://localhost:4200")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
     });
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Policy", builder => builder
+        .WithOrigins("http://localhost:4200")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+    );
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -35,6 +48,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseCors(AllowedOrigins);
 
 app.UseHttpsRedirection();

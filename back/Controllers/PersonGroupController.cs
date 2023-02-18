@@ -133,9 +133,9 @@ public class PersonGroupController : ControllerBase
                 comment = request.comment,
 
                 ModifierId = null,
-                ModificationTime = request.OriginalSendTime,
+                ModificationTime = DateTime.Now,
                 CreatorId = null,
-                CreationTime = request.OriginalSendTime,
+                CreationTime = DateTime.Now,
             };
 
             db.PersonGroups.Add(PersonGroup);
@@ -193,7 +193,7 @@ public class PersonGroupController : ControllerBase
             PersonGroup.comment = request.comment;
             
             PersonGroup.ModifierId = null;
-            PersonGroup.ModificationTime = request.OriginalSendTime;
+            PersonGroup.ModificationTime = DateTime.Now;
 
             await db.SaveChangesAsync();
             

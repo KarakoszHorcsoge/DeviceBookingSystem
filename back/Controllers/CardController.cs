@@ -140,9 +140,9 @@ public class CardController : ControllerBase
                 Comment = request.Comment,
 
                 ModifierId = null,
-                ModificationTime = request.OriginalSendTime,
+                ModificationTime = DateTime.Now,
                 CreatorId = null,
-                CreationTime = request.OriginalSendTime,
+                CreationTime = DateTime.Now,
             };
 
             db.Cards.Add(Card);
@@ -201,7 +201,7 @@ public class CardController : ControllerBase
             Card.Comment = request.Comment;
             
             Card.ModifierId = null;
-            Card.ModificationTime = request.OriginalSendTime;
+            Card.ModificationTime = DateTime.Now;
 
             await db.SaveChangesAsync();
             

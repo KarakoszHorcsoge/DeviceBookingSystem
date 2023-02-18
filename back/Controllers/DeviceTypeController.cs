@@ -127,9 +127,9 @@ public class DeviceTypeController : ControllerBase
                 Name = request.Name,
 
                 ModifierId = null,
-                ModificationTime = request.OriginalSendTime,
+                ModificationTime = DateTime.Now,
                 CreatorId = null,
-                CreationTime = request.OriginalSendTime,
+                CreationTime = DateTime.Now,
             };
 
             db.DeviceTypes.Add(DeviceType);
@@ -185,7 +185,7 @@ public class DeviceTypeController : ControllerBase
             DeviceType.Name = request.Name;
             
             DeviceType.ModifierId = null;
-            DeviceType.ModificationTime = request.OriginalSendTime;
+            DeviceType.ModificationTime = DateTime.Now;
 
             await db.SaveChangesAsync();
             

@@ -11,6 +11,10 @@ import { SettingsComponent } from './settings/settings.component';
 import { AuthorotyComponent } from './authoroty/authoroty.component';
 import { AppleComponent } from './apple/apple.component';
 import { LoggingComponent } from './logging/logging.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -28,6 +32,10 @@ import { LoggingComponent } from './logging/logging.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    BrowserAnimationsModule,
+
+    MatSlideToggleModule,
+    MatTabsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,34 +1,53 @@
-<div >
-<h1 >Alma</h1>
-<button (click)="this.getContent()">Get content</button>
-<table>
-    <tr>
-        <th>card owner id</th>
-        <th>nev</th>
-        <th>email</th>
-        <th>neptun kod</th>
-        <th>torzsszam</th>
-        <th>igazolvany tipus</th>
-        <th>kartyabirtokos tipusa</th>
-        <th>kartyabirtokos statusz</th>
-        <th>kartyaszam</th>
-        <th>kartyatipus</th>
-        <th>kartyastatusz</th>
-        <th>ad username</th>
-    </tr>
-    <tr *ngFor="let item of this.content">
-        <td>{{item.card_owner_id}}</td>
-        <td>{{item.nev}}</td>
-        <td>{{item.email}}</td>
-        <td>{{item.neptun_kod}}</td>
-        <td>{{item.torzsszam}}</td>
-        <td>{{item.igazolvany_tipus}}</td>
-        <td>{{item.kartyabirtokos_tipusa}}</td>
-        <td>{{item.kartyabirtokos_statusz}}</td>
-        <td>{{item.kartyaszam}}</td>
-        <td>{{item.kartyatipus}}</td>
-        <td>{{item.kartyastatusz}}</td>
-        <td>{{item.ad_username}}</td>
-    </tr>
-</table>
+<div>
+    <h1>Alma</h1>
+    <mat-tab-group>
+        <mat-tab label="Keresése">
+            Content 1
+            <button (click)="this.getAll()">Get content</button>
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Authoroty</th>
+                    <th>Creator</th>
+                    <th>Creation Time</th>
+                    <th>Modifier</th>
+                    <th>Modification Time</th>
+                </tr>
+                <tr *ngFor="let admin of this.getAllAdmins">
+                    <td>{{admin.id}}</td>
+                    <td>{{admin.name}}</td>
+                    <td>{{admin.email}}</td>
+                    <td>{{admin.authoroty.name}}</td>
+                    <td>{{admin.creator}}</td>
+                    <td>{{admin.creationTime}}</td>
+                    <td>{{admin.modifier}}</td>
+                    <td>{{admin.modificationTime}}</td>
+                </tr>
+            </table>
+        </mat-tab>
+        <mat-tab label="Módisítás">
+            Id: <input type="text" (keyup.enter)="this.getModifieable(ModifieableId.value)"  #ModifieableId>
+            <button (click)="this.getModifieable(ModifieableId.value)">Keresés</button><br>
+            Name: <input type="text" #modifieableName [disabled]="!this.getOneAdmin"
+            value='{{this.getOneAdmin?.name}}' class="ng-scope ng-pristine ng-valid"><br>
+            Email: <input type="text" #modifieableEmail [disabled]="!this.getOneAdmin"
+            value='{{this.getOneAdmin?.email}}' class="ng-scope ng-pristine ng-valid"><br>
+            Authoroty: <input type="text" #modifieableAuthorotyId [disabled]="!this.getOneAdmin"
+            value='{{this.getOneAdmin?.authorotyId}}' class="ng-scope ng-pristine ng-valid"> <br>
+            <button (click)="this.modifySeparateParam(ModifieableId.value,modifieableName.value,
+            modifieableEmail.value,modifieableAuthorotyId.value)">Modify</button>
+        </mat-tab>
+        <br>
+        <mat-tab label="Hozzáadás">
+            Name: <input type="text" #creationName class="ng-scope ng-pristine ng-valid"><br>
+            Email: <input type="text" #creationEmail class="ng-scope ng-pristine ng-valid"><br>
+            Authoroty: <input type="text" #creationAuthorotyId class="ng-scope ng-pristine ng-valid"> <br>
+            
+            <button (click)="this.createSeparateParam(creationName.value,
+            creationEmail.value,creationAuthorotyId.value)">Create</button>
+        </mat-tab>
+    </mat-tab-group>
+
 </div>

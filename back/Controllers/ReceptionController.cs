@@ -138,9 +138,9 @@ public class ReceptionController : ControllerBase
                 AdminId = request.AdminId!,
 
                 ModifierId = null,
-                ModificationTime = request.OriginalSendTime,
+                ModificationTime = DateTime.Now,
                 CreatorId = null,
-                CreationTime = request.OriginalSendTime,
+                CreationTime = DateTime.Now,
             };
 
             db.Receptions.Add(Reception);
@@ -199,7 +199,7 @@ public class ReceptionController : ControllerBase
             Reception.AdminId = request.AdminId;
             
             Reception.ModifierId = null;
-            Reception.ModificationTime = request.OriginalSendTime;
+            Reception.ModificationTime = DateTime.Now;
 
             await db.SaveChangesAsync();
             

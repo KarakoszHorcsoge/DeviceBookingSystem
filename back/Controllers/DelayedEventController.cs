@@ -136,9 +136,9 @@ public class DelayedEventController : ControllerBase
                 Comment = request.Comment,
 
                 ModifierId = null,
-                ModificationTime = request.OriginalSendTime,
+                ModificationTime = DateTime.Now,
                 CreatorId = null,
-                CreationTime = request.OriginalSendTime,
+                CreationTime = DateTime.Now,
             };
 
             db.DelayedEvents.Add(DelayedEvent);
@@ -197,7 +197,7 @@ public class DelayedEventController : ControllerBase
             DelayedEvent.Comment = request.Comment;
             
             DelayedEvent.ModifierId = null;
-            DelayedEvent.ModificationTime = request.OriginalSendTime;
+            DelayedEvent.ModificationTime = DateTime.Now;
 
             await db.SaveChangesAsync();
             

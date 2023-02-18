@@ -147,9 +147,9 @@ public class DeviceController : ControllerBase
                 PosesserId = request.PosesserId,
 
                 ModifierId = null,
-                ModificationTime = request.OriginalSendTime,
+                ModificationTime = DateTime.Now,
                 CreatorId = null,
-                CreationTime = request.OriginalSendTime,
+                CreationTime = DateTime.Now,
             };
 
             db.Devices.Add(Device);
@@ -209,7 +209,7 @@ public class DeviceController : ControllerBase
             Device.PosesserId = request.PosesserId;
             
             Device.ModifierId = null;
-            Device.ModificationTime = request.OriginalSendTime;
+            Device.ModificationTime = DateTime.Now;
 
             await db.SaveChangesAsync();
             

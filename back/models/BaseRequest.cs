@@ -5,9 +5,5 @@ public class BaseRequest{
     /// Amikor eredetileg ell lett küldve a kérelem
     /// </summary>
     /// <value></value>
-    public DateTime OriginalSendTime { get; set; }
-
-    public Guid CreatorId { get; set; }
-
-    public Guid ModifierId { get; set; }
+    public string OriginalSendTime { get; set; }
 }
