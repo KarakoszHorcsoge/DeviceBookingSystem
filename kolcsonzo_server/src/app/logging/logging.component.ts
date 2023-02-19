@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { eventLogService } from 'services/eventLog.service';
 
 @Component({
   selector: 'app-logging',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoggingComponent implements OnInit {
 
-  constructor() { }
+  constructor(private eventLogService:eventLogService) { }
+
+  tableIf
 
   ngOnInit(): void {
   }

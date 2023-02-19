@@ -17,6 +17,7 @@ export class AppleComponent {
 
 
   constructor(private administratorService: administratorService) {
+    this.getAll();
   }
 
   setContent(data: any) {
