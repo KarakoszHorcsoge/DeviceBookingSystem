@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { eventLogService } from 'services/eventLog.service';
+import { eventLog, eventLogService } from 'services/eventLog.service';
 
 @Component({
   selector: 'app-logging',
@@ -8,9 +8,17 @@ import { eventLogService } from 'services/eventLog.service';
 })
 export class LoggingComponent implements OnInit {
 
-  constructor(private eventLogService:eventLogService) { }
+  constructor(protected eventLogService:eventLogService) { 
+    this.getAllEvent();
+  }
 
-  tableIf
+  table:eventLog[]|undefined = undefined;
+
+  async getAllEvent(){
+    this.eventLogService.getAll().subscribe(
+      (data:eventLog[]) =>{ this.table = data}
+      )
+  }
 
   ngOnInit(): void {
   }

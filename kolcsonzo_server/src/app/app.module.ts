@@ -15,6 +15,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatTabsModule} from '@angular/material/tabs';
+import { eventLogService } from 'services/eventLog.service';
+import { administratorService } from 'services/administrator.service';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,7 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatSlideToggleModule,
     MatTabsModule,
   ],
-  providers: [],
+  providers: [eventLogService,administratorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

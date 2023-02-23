@@ -9,6 +9,14 @@
             <th>command type</th>
             <th>command</th>
         </thead>
+        <tbody *ngFor="let content of table">
+            <td>{{content.id}}</td>
+            <td>{{content.executionTime}}</td>
+            <td>{{content.targetType}}</td>
+            <td>{{content.targetId}}</td>
+            <td>{{content.commandType}}</td>
+            <td>{{content.command}}</td>
+        </tbody>
     </table>
 
 </div>
