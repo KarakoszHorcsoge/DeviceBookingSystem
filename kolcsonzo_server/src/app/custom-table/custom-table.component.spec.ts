@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DaniTableComponent } from './dani-table.component';
+import { CustomTableComponent } from './custom-table.component';
 
-describe('DaniTableComponent', () => {
-  let component: DaniTableComponent;
-  let fixture: ComponentFixture<DaniTableComponent>;
+describe('CustomTableComponent', () => {
+  let component: CustomTableComponent;
+  let fixture: ComponentFixture<CustomTableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DaniTableComponent ]
+      declarations: [ CustomTableComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DaniTableComponent);
+    fixture = TestBed.createComponent(CustomTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

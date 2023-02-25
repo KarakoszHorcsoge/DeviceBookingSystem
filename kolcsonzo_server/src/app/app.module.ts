@@ -17,7 +17,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatTabsModule} from '@angular/material/tabs';
 import { eventLogService } from 'services/eventLog.service';
 import { administratorService } from 'services/administrator.service';
-import { DaniTableComponent } from './dani-table/dani-table.component';
+import { Injector } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
+import { CustomTableComponent } from './custom-table/custom-table.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,7 @@ import { DaniTableComponent } from './dani-table/dani-table.component';
     AuthorotyComponent,
     AppleComponent,
     LoggingComponent,
-    DaniTableComponent,
+    CustomTableComponent,
   
   ],
   imports: [
@@ -42,6 +44,14 @@ import { DaniTableComponent } from './dani-table/dani-table.component';
     MatTabsModule,
   ],
   providers: [eventLogService,administratorService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private injector:Injector){
+  }
+  
+  // ngDoBootstrap(){
+  //   const table = createCustomElement(DaniTableComponent,{injector:this.injector});
+  //   customElements.define('dani-table',table);
+  // }
+ }
