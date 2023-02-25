@@ -17,6 +17,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatTabsModule} from '@angular/material/tabs';
 import { eventLogService } from 'services/eventLog.service';
 import { administratorService } from 'services/administrator.service';
+import { DaniTableComponent } from './dani-table/dani-table.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { administratorService } from 'services/administrator.service';
     AuthorotyComponent,
     AppleComponent,
     LoggingComponent,
+    DaniTableComponent,
   
   ],
   imports: [
