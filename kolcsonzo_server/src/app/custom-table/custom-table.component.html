@@ -1,1 +1,13 @@
-<p>custom-table works!{{this.msg}}</p>
+<table class="custom-table">
+    <thead>
+        <th (mouseover)="this.showHeaderIcons=true" (mouseout)="this.showHeaderIcons=false" class="custom-table-header" *ngFor = "let displayName of this.displayNames">
+            {{displayName}}
+            <span *ngIf="this.showHeaderIcons" class="order-arrow"><img src="assets/arrow.svg" alt="CAN'T LOAD ARROW" height="15"></span>
+        </th>
+    </thead>
+    <tbody>
+        <tr matTooltip="{{content[this.tooltip]}}"  class="custom-table-row" *ngFor = "let content of contents">
+            <td class="custom-table-cell" *ngFor = "let contentToShow of this.contentsToShow">{{content[contentToShow]}}</td>
+        </tr>
+    </tbody>
+</table>

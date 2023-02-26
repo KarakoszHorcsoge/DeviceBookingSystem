@@ -1,0 +1,28 @@
+.custom-table, .custom-table-header, .custom-table-cell {
+    border-bottom: 1px solid rgba(167, 164, 164,0.7);
+    border-collapse: collapse;
+}
+
+.custom-table-header{
+    color: rgb(19, 35, 78);
+    font-size: 30;
+}
+
+.custom-table-row:nth-child(odd){
+    background-color: rgba(206, 203, 203,0.7);
+}
+
+.custom-table{
+    width: 100%;
+}
+
+.odred-arrow{
+    display: none;
+    width: 2rem;
+    height: 2rem;
+    float: right;
+}
+
+.custom-table-header .odred-arrow:hover{
+    display: block;
+}

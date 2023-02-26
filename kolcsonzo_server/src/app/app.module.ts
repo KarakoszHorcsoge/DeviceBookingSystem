@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
+import { NgModule,Injector } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MyComponentComponent } from './my-component/my-component.component';
 import { HomeComponent } from './home/home.component';
 import { SideMenuComponent } from './side-menu/side-menu.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -13,18 +12,21 @@ import { AppleComponent } from './apple/apple.component';
 import { LoggingComponent } from './logging/logging.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+//Matlab imports
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatTooltipModule} from '@angular/material/tooltip';
+
+//services
 import { eventLogService } from 'services/eventLog.service';
 import { administratorService } from 'services/administrator.service';
-import { Injector } from '@angular/core';
-import { createCustomElement } from '@angular/elements';
+
+
 import { CustomTableComponent } from './custom-table/custom-table.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MyComponentComponent,
     HomeComponent,
     SideMenuComponent,
     SettingsComponent,
@@ -42,6 +44,7 @@ import { CustomTableComponent } from './custom-table/custom-table.component';
 
     MatSlideToggleModule,
     MatTabsModule,
+    MatTooltipModule,
   ],
   providers: [eventLogService,administratorService],
   bootstrap: [AppComponent],

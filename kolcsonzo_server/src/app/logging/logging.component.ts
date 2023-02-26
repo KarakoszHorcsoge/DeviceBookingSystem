@@ -9,10 +9,12 @@ import { eventLog, eventLogService } from 'services/eventLog.service';
 export class LoggingComponent implements OnInit {
 
   constructor(protected eventLogService:eventLogService) { 
-    this.getAllEvent();
+    
   }
 
   table:eventLog[]|undefined = undefined;
+  contentsToShow:string[] = ['executionTime','targetType','targetId',
+  'commandType']
 
   async getAllEvent(){
     this.eventLogService.getAll().subscribe(
