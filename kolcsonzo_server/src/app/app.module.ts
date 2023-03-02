@@ -16,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatTableModule} from '@angular/material/table';
 
 //services
 import { eventLogService } from 'services/eventLog.service';
@@ -45,6 +46,7 @@ import { CustomTableComponent } from './custom-table/custom-table.component';
     MatSlideToggleModule,
     MatTabsModule,
     MatTooltipModule,
+    MatTableModule,
   ],
   providers: [eventLogService,administratorService],
   bootstrap: [AppComponent],

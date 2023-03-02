@@ -1,7 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { formatDistance, subDays } from 'date-fns'
 
+
+
+export interface PeriodicElement {
+  name: string;
+  position: number;
+  weight: number;
+  symbol: string;
+}
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
@@ -15,19 +22,26 @@ export class CustomTableComponent implements OnInit {
   @Input() contentsToShow!: string[];
   @Input() displayNames!: string[];
   @Input() tooltip: string = "";
+  @Input() descriptionsDisplayName: string[] = ["expand"];
+  
 
   //variables
-  contents: any[] | null = null;
+  contents: any[] = [];
   showHeaderIcons: boolean = false;
-
+  expandedElement: any |null;
 
   constructor() {
   }
 
+  
+  
   ngOnInit() {
     this.load.subscribe(
-      (data: any[]) => { this.contents = data });
-    
+      (data: any[]) => { this.contents = data ;
+      console.log('okay');
+      });
+      //this.displayNames.push(this.descriptionsDisplayName[0]);
+      //this.contentsToShow = this.contentsToShow.concat(this.descriptionsDisplayName)
   }
 
 }

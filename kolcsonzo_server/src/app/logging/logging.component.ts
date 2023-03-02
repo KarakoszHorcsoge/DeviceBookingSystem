@@ -21,7 +21,7 @@ export class LoggingComponent implements OnInit {
       (data:eventLog[]) =>{ this.table = data}
       )
   }
-
+  
   ngOnInit(): void {
   }
 
