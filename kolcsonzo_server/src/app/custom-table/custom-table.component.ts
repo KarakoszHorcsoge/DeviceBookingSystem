@@ -29,7 +29,7 @@ export class CustomTableComponent implements OnInit {
   contents: any[] = [];
   showHeaderIcons: boolean = false;
   expandedElement: any |null;
-
+  columnsWithDescription:string[]=[];
   constructor() {
   }
 
@@ -40,6 +40,8 @@ export class CustomTableComponent implements OnInit {
       (data: any[]) => { this.contents = data ;
       console.log('okay');
       });
+      this.columnsWithDescription = [...this.displayNames,...this.descriptionsDisplayName]
+
       //this.displayNames.push(this.descriptionsDisplayName[0]);
       //this.contentsToShow = this.contentsToShow.concat(this.descriptionsDisplayName)
   }

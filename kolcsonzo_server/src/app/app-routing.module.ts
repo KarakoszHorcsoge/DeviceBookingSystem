@@ -6,6 +6,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { AuthorotyComponent } from './authoroty/authoroty.component';
 import { AppleComponent } from './apple/apple.component';
 import { LoggingComponent } from './logging/logging.component';
+import { TestComponent } from './test/test.component';
 
 const routes: Routes = [
   {path: 'home', component:HomeComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path: 'authoroty', component:AuthorotyComponent},
   {path: 'apple', component:AppleComponent},
   {path: 'logging', component:LoggingComponent},
+  {path: 'test', component:TestComponent},
 ];
 
 @NgModule({

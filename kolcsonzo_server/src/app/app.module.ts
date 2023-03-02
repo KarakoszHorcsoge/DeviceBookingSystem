@@ -24,6 +24,7 @@ import { administratorService } from 'services/administrator.service';
 
 
 import { CustomTableComponent } from './custom-table/custom-table.component';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { CustomTableComponent } from './custom-table/custom-table.component';
     AppleComponent,
     LoggingComponent,
     CustomTableComponent,
+    TestComponent,
   
   ],
   imports: [
