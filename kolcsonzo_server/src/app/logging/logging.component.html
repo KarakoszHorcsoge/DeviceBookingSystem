@@ -1,5 +1,6 @@
 <div style="text-align:center;">
     <h1>Naplózás</h1>
     <custom-table [contentsToShow]="this.contentsToShow" [load]="this.eventLogService.getAll()"
-    [displayNames]="this.contentsToShow" [tooltip]="'command'"></custom-table>
+    [displayNames]="this.contentsToShow" [descriptionsDisplayName] = "['Parancs']"
+    [descriptions] ="['command']"></custom-table>
 </div>
