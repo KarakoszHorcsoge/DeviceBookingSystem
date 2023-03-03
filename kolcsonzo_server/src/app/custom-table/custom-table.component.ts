@@ -32,6 +32,7 @@ export class CustomTableComponent implements OnInit {
   showHeaderIcons: boolean = false;
   expandedElement: any |null;
   columnsWithDescription:string[]=[];
+  length = 0;
   constructor() {
   }
 
@@ -55,8 +56,13 @@ export class CustomTableComponent implements OnInit {
   ngOnInit() {
     this.load.subscribe(
       (data: any[]) => { this.contents = new MatTableDataSource(data) ;
+        this.length=data.length;
       });
       this.columnsWithDescription = [...this.displayNames,...this.descriptionsDisplayName]
+  }
+
+  getPageSizeOptions():number[]{
+    return [10,20,50,100,this.length].filter(x => x <=  this.length);
   }
 
 }
