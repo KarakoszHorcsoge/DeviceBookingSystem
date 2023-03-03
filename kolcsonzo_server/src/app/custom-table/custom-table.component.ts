@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {MatTableDataSource} from '@angular/material/table';
@@ -19,7 +19,7 @@ import { MatPaginator } from '@angular/material/paginator';
       ]),
     ],
 })
-export class CustomTableComponent implements OnInit, AfterViewInit {
+export class CustomTableComponent implements OnInit {
   //inputok
   @Input() load!: Observable<any>;
   @Input() contentsToShow!: string[];
@@ -40,18 +40,23 @@ export class CustomTableComponent implements OnInit, AfterViewInit {
     this.contents.filter = filterValue.trim().toLowerCase();
   }
   
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
+  private paginator!: MatPaginator;
+
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
+
+  setDataSourceAttributes() {
+    this.contents.paginator = this.paginator;
+  }
   
   ngOnInit() {
     this.load.subscribe(
       (data: any[]) => { this.contents = new MatTableDataSource(data) ;
       });
       this.columnsWithDescription = [...this.displayNames,...this.descriptionsDisplayName]
-  }
-
-  ngAfterViewInit() {
-    this.contents.paginator = this.paginator;
   }
 
 }

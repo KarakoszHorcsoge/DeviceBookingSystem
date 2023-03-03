@@ -1,19 +1,24 @@
 <mat-form-field>
   <mat-label>Szűrő</mat-label>
-  <input matInput (keyup)="applyFilter($event)" placeholder="Pl. Cél elem id-ja" #input>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Pl. Cél elem id-ja"
+    #input>
 </mat-form-field>
 
-<table multiTemplateDataRows mat-table [dataSource]="contents" class="mat-elevation-z8">
+<table multiTemplateDataRows mat-table [dataSource]="contents"
+  class="mat-elevation-z8">
 
-  <ng-container *ngFor="let content of contentsToShow; let i=index;" matColumnDef="{{content}}">
+  <ng-container *ngFor="let content of contentsToShow; let i=index;"
+    matColumnDef="{{content}}">
     <th mat-header-cell *matHeaderCellDef> {{displayNames[i]}} </th>
     <td mat-cell *matCellDef="let element"> {{element[content]}} </td>
   </ng-container>
 
   <ng-container matColumnDef="expand">
-    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsWithDescription.length">
-      <div class="example-element-detail" [@detailExpand]="element != expandedElement ? 'collapsed' : descriptions.length != 0 ? 'expanded':
-                'collapsed'">
+    <td mat-cell *matCellDef="let element"
+      [attr.colspan]="columnsWithDescription.length">
+      <div class="example-element-detail" [@detailExpand]="element !=
+        expandedElement ? 'collapsed' : descriptions.length != 0 ? 'expanded':
+        'collapsed'">
         <div class="example-element-description">
 
           <div *ngFor="let description of descriptions; let i=index;">
@@ -26,16 +31,18 @@
 
   <tr mat-header-row *matHeaderRowDef="displayNames"></tr>
 
-    <tr mat-row *matRowDef="let element; columns: displayNames;" class="example-element-row"
-      [class.example-expanded-row]="expandedElement === element"
-      (click)="expandedElement= expandedElement === element ? null : element">
-    </tr>
-  <tr mat-row *matRowDef="let row; columns: ['expand'];" class="example-detail-row"></tr>
+  <tr mat-row *matRowDef="let element; columns: displayNames;"
+    class="example-element-row"
+    [class.example-expanded-row]="expandedElement === element"
+    (click)="expandedElement= expandedElement === element ? null : element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expand'];"
+    class="example-detail-row"></tr>
 
 
 </table>
 
-<mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                 showFirstLastButtons
-                 aria-label="Válasz hány elemet szeretnél az oldalon megjeleníteni.">
-  </mat-paginator>
+<mat-paginator #pageinator [pageSizeOptions]="[10,15, 20, 40]"
+  showFirstLastButtons
+  aria-label="Select page of periodic elements">
+</mat-paginator>

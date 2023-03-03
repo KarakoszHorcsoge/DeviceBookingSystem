@@ -30,16 +30,16 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class TestComponent implements AfterViewInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  contents = new MatTableDataSource(ELEMENT_DATA);
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.contents.filter = filterValue.trim().toLowerCase();
   }
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    this.contents.paginator = this.paginator;
   }
 }
