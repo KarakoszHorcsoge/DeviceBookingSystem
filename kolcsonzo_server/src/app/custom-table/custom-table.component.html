@@ -1,3 +1,8 @@
+<mat-form-field>
+  <mat-label>Szűrő</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Pl. Cél elem id-ja" #input>
+</mat-form-field>
+
 <table multiTemplateDataRows mat-table [dataSource]="contents" class="mat-elevation-z8">
 
   <ng-container *ngFor="let content of contentsToShow; let i=index;" matColumnDef="{{content}}">
@@ -29,3 +34,8 @@
 
 
 </table>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                 showFirstLastButtons
+                 aria-label="Válasz hány elemet szeretnél az oldalon megjeleníteni.">
+  </mat-paginator>

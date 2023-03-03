@@ -1,14 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import {MatTableDataSource} from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
@@ -23,7 +19,7 @@ export interface PeriodicElement {
       ]),
     ],
 })
-export class CustomTableComponent implements OnInit {
+export class CustomTableComponent implements OnInit, AfterViewInit {
   //inputok
   @Input() load!: Observable<any>;
   @Input() contentsToShow!: string[];
@@ -32,24 +28,30 @@ export class CustomTableComponent implements OnInit {
   @Input() descriptions: string[] = [];
 
   //variables
-  contents: any[] = [];
+  contents=new MatTableDataSource();
   showHeaderIcons: boolean = false;
   expandedElement: any |null;
   columnsWithDescription:string[]=[];
   constructor() {
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.contents.filter = filterValue.trim().toLowerCase();
+  }
   
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
   
   ngOnInit() {
     this.load.subscribe(
-      (data: any[]) => { this.contents = data ;
-      console.log('okay');
+      (data: any[]) => { this.contents = new MatTableDataSource(data) ;
       });
       this.columnsWithDescription = [...this.displayNames,...this.descriptionsDisplayName]
+  }
 
-      //this.displayNames.push(this.descriptionsDisplayName[0]);
-      //this.displayNames = this.displayNames.concat(this.descriptionsDisplayName)
+  ngAfterViewInit() {
+    this.contents.paginator = this.paginator;
   }
 
 }
