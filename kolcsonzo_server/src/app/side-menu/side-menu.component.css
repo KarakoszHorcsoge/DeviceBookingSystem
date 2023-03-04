@@ -4,7 +4,7 @@
     width: var(--side-menu-w);
     background-color: var(--nav-background);
     position: absolute;
-    overflow: hidden;
+    overflow-x: hidden;
     transition: width 150ms ease;
 
     --svg-primary: #2055c9;
@@ -14,9 +14,8 @@
 
 .navbar:hover{
     overflow: auto;
-    min-width: fit-content;
     width: 15vw;
-    max-width: 400px;
+    max-width: 100%;
 }
 
 
@@ -57,7 +56,9 @@
     color: var(--svg-primary);
 }
 .nav-link svg {
+    min-width: 2rem;
     width: 2rem;
+    min-height: 2rem;
     height: 2rem;
     margin: 0 1.5rem;
     fill: var(--svg-secondary);
@@ -65,9 +66,11 @@
 
 .nav-link:hover svg{
     width: 3rem;
+    max-width: 3rem;
     height: 3rem;
+    max-height: 3rem;
     fill: var(--svg-primary);
-    transition: width 150ms ease;
+    transition: width 100ms ease;
 
 }
 

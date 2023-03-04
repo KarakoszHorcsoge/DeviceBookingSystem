@@ -11,6 +11,8 @@ import { AuthorotyComponent } from './authoroty/authoroty.component';
 import { AppleComponent } from './apple/apple.component';
 import { LoggingComponent } from './logging/logging.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CustomTableComponent } from './custom-table/custom-table.component';
+import { TestComponent } from './test/test.component';
 
 //material imports
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -20,14 +22,13 @@ import {MatTableModule} from '@angular/material/table';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 //services
 import { eventLogService } from 'services/eventLog.service';
 import { administratorService } from 'services/administrator.service';
 
 
-import { CustomTableComponent } from './custom-table/custom-table.component';
-import { TestComponent } from './test/test.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { TestComponent } from './test/test.component';
     MatFormFieldModule,
     MatInputModule,
     MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [eventLogService,administratorService],
   bootstrap: [AppComponent],

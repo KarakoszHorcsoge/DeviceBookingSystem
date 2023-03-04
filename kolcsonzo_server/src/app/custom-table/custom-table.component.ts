@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {MatTableDataSource} from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import {MatSort, Sort} from '@angular/material/sort';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 
 
 @Component({
@@ -33,7 +35,7 @@ export class CustomTableComponent implements OnInit {
   expandedElement: any |null;
   columnsWithDescription:string[]=[];
   length = 0;
-  constructor() {
+  constructor(private _liveAnnouncer: LiveAnnouncer) {
   }
 
   applyFilter(event: Event) {
@@ -49,6 +51,12 @@ export class CustomTableComponent implements OnInit {
     this.setDataSourceAttributes();
   }
 
+  @ViewChild(MatSort, {static: false})
+  set sort(value: MatSort) {
+    if (this.contents){
+      this.contents.sort = value;
+    }
+  }
   setDataSourceAttributes() {
     this.contents.paginator = this.paginator;
   }
@@ -65,4 +73,15 @@ export class CustomTableComponent implements OnInit {
     return [10,20,50,100,this.length].filter(x => x <=  this.length);
   }
 
+  announceSortChange(sortState: Sort) {
+    // This example uses English messages. If your application supports
+    // multiple language, you would internationalize these strings.
+    // Furthermore, you can customize the message to add additional
+    // details about the values being sorted.
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
+  }
 }

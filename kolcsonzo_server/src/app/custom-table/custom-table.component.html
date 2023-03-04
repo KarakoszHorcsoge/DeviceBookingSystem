@@ -1,11 +1,14 @@
-<mat-form-field>
-  <mat-label>Szűrő</mat-label>
-  <input matInput (keyup)="applyFilter($event)" placeholder="Pl. Cél elem id-ja"
+<div>
+
+  <mat-form-field>
+    <mat-label>Szűrő</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Pl. Cél elem id-ja"
     #input>
-</mat-form-field>
+  </mat-form-field>
+</div>
 
 <table multiTemplateDataRows mat-table [dataSource]="contents"
-  class="mat-elevation-z8">
+  class="mat-elevation-z8" matSort (matSortChange)="announceSortChange($event)">
 
   <ng-container *ngFor="let content of contentsToShow; let i=index;"
     matColumnDef="{{content}}">
