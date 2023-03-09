@@ -6,7 +6,7 @@ import { personGet } from './person.service';
 import { deviceTypeGet } from './deviceType.service';
 import { receptionGet } from './reception.service';
 
-export interface authorotyGet{
+export interface deviceGet{
   deviceStatus:string,
   comment:string,
   deviceTypeId:string,
@@ -24,7 +24,7 @@ export interface authorotyGet{
   modifier:AdministratorGet|null,
 }
 
-export interface authorotyAddUpdate{
+export interface deviceAddUpdate{
   deviceStatus:string,
   comment:string,
   deviceTypeId:string,
@@ -37,25 +37,23 @@ export interface authorotyAddUpdate{
 export class deviceService {
   constructor(private http: HttpClient) { }
 
-  
-
   getAll() {
-    return this.http.get<authorotyGet[]>(environment.apiUrl + '/Administrator');
+    return this.http.get<deviceGet[]>(environment.apiUrl + '/Device');
   }
   
   getOne(guid:string) {
-    return this.http.get<authorotyGet>(environment.apiUrl + '/Administrator/'+guid);
+    return this.http.get<deviceGet>(environment.apiUrl + '/Device/'+guid);
   }
   
-  updateOne(guid:string,newModel:authorotyAddUpdate) {
-    return this.http.put<authorotyGet>(environment.apiUrl + '/Administrator/'+guid, newModel, {observe: 'response'});
+  updateOne(guid:string,newModel:deviceAddUpdate) {
+    return this.http.put<deviceGet>(environment.apiUrl + '/Device/'+guid, newModel, {observe: 'response'});
   }
 
-  addOne(newModel:authorotyAddUpdate){
-    return this.http.post<authorotyGet>(environment.apiUrl+'/Administrator',newModel);
+  addOne(newModel:deviceAddUpdate){
+    return this.http.post<deviceGet>(environment.apiUrl+'/Device',newModel);
   }
 
   deleteOne(guid:string){
-    return this.http.delete(environment.apiUrl + '/Administrator/'+guid);
+    return this.http.delete(environment.apiUrl + '/Device/'+guid);
   }
 }

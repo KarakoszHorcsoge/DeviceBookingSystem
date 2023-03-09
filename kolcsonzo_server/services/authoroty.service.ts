@@ -31,22 +31,22 @@ export class authorotyService {
   
 
   getAll() {
-    return this.http.get<authorotyGet[]>(environment.apiUrl + '/Administrator');
+    return this.http.get<authorotyGet[]>(environment.apiUrl + '/Authoroty');
   }
   
   getOne(guid:string) {
-    return this.http.get<authorotyGet>(environment.apiUrl + '/Administrator/'+guid);
+    return this.http.get<authorotyGet>(environment.apiUrl + '/Authoroty/'+guid);
   }
   
   updateOne(guid:string,newModel:authorotyAddUpdate) {
-    return this.http.put<authorotyGet>(environment.apiUrl + '/Administrator/'+guid, newModel, {observe: 'response'});
+    return this.http.put<authorotyGet>(environment.apiUrl + '/Authoroty/'+guid, newModel, {observe: 'response'});
   }
 
   addOne(newModel:authorotyAddUpdate){
-    return this.http.post<authorotyGet>(environment.apiUrl+'/Administrator',newModel);
+    return this.http.post<authorotyGet>(environment.apiUrl+'/Authoroty',newModel);
   }
 
   deleteOne(guid:string){
-    return this.http.delete(environment.apiUrl + '/Administrator/'+guid);
+    return this.http.delete(environment.apiUrl + '/Authoroty/'+guid);
   }
 }

@@ -29,22 +29,22 @@ export class cardService {
   constructor(private http: HttpClient) { }
 
   getAll() {
-    return this.http.get<personTypeGet[]>(environment.apiUrl + '/Person');
+    return this.http.get<personTypeGet[]>(environment.apiUrl + '/PersonType');
   }
 
   getOne(guid: string) {
-    return this.http.get<personTypeGet>(environment.apiUrl + '/Person/' + guid);
+    return this.http.get<personTypeGet>(environment.apiUrl + '/PersonType/' + guid);
   }
 
   updateOne(guid: string, newModel: personTypeAddUpdate) {
-    return this.http.put<personTypeGet>(environment.apiUrl + '/Person/' + guid, newModel, { observe: 'response' });
+    return this.http.put<personTypeGet>(environment.apiUrl + '/PersonType/' + guid, newModel, { observe: 'response' });
   }
 
   addOne(newModel: personTypeAddUpdate) {
-    return this.http.post<personTypeGet>(environment.apiUrl + '/Person', newModel);
+    return this.http.post<personTypeGet>(environment.apiUrl + '/PersonType', newModel);
   }
 
   deleteOne(guid: string) {
-    return this.http.delete(environment.apiUrl + '/Person/' + guid);
+    return this.http.delete(environment.apiUrl + '/PersonType/' + guid);
   }
 }
