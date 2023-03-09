@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Administrator } from './administrator.service';
+import { AdministratorGet } from './administrator.service';
+import {environment} from '../enviorment';
 
 export interface eventLogAddUpdateRequest{
   commandOriginId:string,
@@ -19,9 +20,9 @@ export interface eventLogAddUpdateRequest{
 export interface eventLog{
   id:string,
   commandOriginId:string|null,
-  commandOrigin:Administrator,
+  commandOrigin:AdministratorGet,
   commandParentId:string|null,
-  commandParent:Administrator,
+  commandParent:AdministratorGet,
   executionTime:string,
   targetType:number,
   targetId:string,
@@ -39,18 +40,18 @@ export interface eventLog{
 export class eventLogService {
   constructor(private http: HttpClient) { }
 
-  url = 'http://localhost:5000';
+
 
   getAll() {
-    return this.http.get<eventLog[]>(this.url + '/eventLog');
+    return this.http.get<eventLog[]>(environment.apiUrl + '/eventLog');
   }
   
   getOne(guid:string) {
-    return this.http.get<eventLog>(this.url + '/eventLog/'+guid);
+    return this.http.get<eventLog>(environment.apiUrl + '/eventLog/'+guid);
   }
 
   addOne(newModel:eventLogAddUpdateRequest){
-    return this.http.post<eventLog>(this.url+'/eventLog',newModel);
+    return this.http.post<eventLog>(environment.apiUrl+'/eventLog',newModel);
   }
 
 }

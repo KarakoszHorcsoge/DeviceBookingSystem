@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Administrator, AdministratorAddUpdateRequest, administratorService } from 'services/administrator.service';
+import { AdministratorGet, AdministratorAddUpdateRequest, administratorService } from 'services/administrator.service';
 
 
 @Component({
@@ -12,8 +12,8 @@ export class AppleComponent {
   //interface
 
   //declaration
-  getAllAdmins: Administrator[] | undefined = undefined;
-  getOneAdmin: Administrator | undefined = undefined;
+  getAllAdmins: AdministratorGet[] | undefined = undefined;
+  getOneAdmin: AdministratorGet | undefined = undefined;
 
 
   constructor(private administratorService: administratorService) {
